@@ -43,7 +43,7 @@ export const render = (dice, roll, stats, critical = 3) => {
   } else if (roll > critical_failure) {
     result = "Echec Critique";
     classes = ["border-danger", 'bg-danger', 'text-white'];
-  } else if (dice <= roll) {
+  } else if (roll <= stats) {
     result = 'Reussite';
     classes = ["border-success"];
   } else {
