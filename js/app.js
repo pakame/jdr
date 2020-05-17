@@ -1,6 +1,7 @@
 import * as dom from "./dom.js";
 import * as dice from "./dice.js";
 import * as html from "./html.js";
+import * as icon from "./icons.js"
 import Stats from "./stats.js";
 
 const stats = new Stats(Object.keys(STATISTIQUES));
@@ -8,19 +9,24 @@ const stats = new Stats(Object.keys(STATISTIQUES));
 // Load statistics
 stats.load();
 
+// auto load icon
+icon.auto();
+
 for (let key in STATISTIQUES) {
-  dom.id('stats').appendChild(html.parse(
-    '<div class="form-row mb-1">' +
-    '<label for="stats-' + key + '" class="col-12 col-sm-3 col-lg-2 col-form-label">' + STATISTIQUES[key] + '</label>' +
-    '<div class="col-auto">' +
-    '<input type="number" class="form-control" id="stats-' + key + '" name="' + key + '" value="' + stats.get(key) + '" placeholder="10, 20, ...">' +
-    '</div>' +
-    '<div class="col-auto">' +
-    '<button class="btn btn-outline-primary stat-launch mr-2" id="stat-launch-' + key + '">&nbsp;' + dice.dice_as_html(20, true) + '&nbsp;</button>&nbsp;' +
-    '<span id="stat-result-' + key + '"></span>' +
-    '</div>' +
-    '</div>'
-  ));
+  dice.dice_as_html(100, 'lg').then((icon) => {
+    dom.id('stats').appendChild(html.parse(
+      '<div class="form-row mb-1">' +
+      '<label for="stats-' + key + '" class="col-12 col-sm-3 col-lg-2  col-xl-3 col-form-label">' + STATISTIQUES[key] + '</label>' +
+      '<div class="col-auto">' +
+      '<input type="number" class="form-control" id="stats-' + key + '" name="' + key + '" value="' + stats.get(key) + '" placeholder="10, 20, ...">' +
+      '</div>' +
+      '<div class="col-auto">' +
+      '<button class="btn btn-outline-primary stat-launch mr-2" name="' + key + '">&nbsp;' + icon + '&nbsp;</button>&nbsp;' +
+      '<span class="result"></span>' +
+      '</div>' +
+      '</div>'
+    ));
+  });
 
   dom.id('select-stat-1').appendChild(html.parse('<option value="' + key + '">' + STATISTIQUES[key] + '</option>'));
   dom.id('select-stat-2').appendChild(html.parse('<option value="' + key + '">' + STATISTIQUES[key] + '</option>'));
@@ -33,9 +39,19 @@ dom.add_delegate_event(dom.id('stats'), 'change', 'input', (event) => {
   stats.set(target.name, target.value);
 });
 
+// launch stats
+dom.add_delegate_event(dom.id('stats'), 'click', 'button', (event, target) => {
+  event.preventDefault();
+  const d100 = dice.roll(100);
+  const {result, classes} = dice.render(100, d100, stats.get(target.name));
+  const $result = target.nextElementSibling;
+  $result.textContent = d100 + ' : ' + result;
+  $result.classList.remove(...$result.classList.values());
+  $result.classList.add("p-2", "rounded", "border", ...classes)
+});
 
 // Calculate chance
-dom.id('calc').addEventListener('mouseup', (event) => {
+dom.add_event(dom.id('calc'), 'mouseup', (event) => {
   const stat1 = parseInt(dom.id('stat-1').value, 10);
   const stat2 = parseInt(dom.id('stat-2').value, 10);
 
@@ -70,18 +86,6 @@ for (let i = 1; i < 3; i++) {
   })
 }
 
-// launch stats
-for (let key in STATISTIQUES) {
-  dom.id('stat-launch-' + key).addEventListener('click', (event) => {
-    event.preventDefault();
-    const d100 = dice.roll(100);
-    const {result, classes} = dice.render(100, d100, stats.get(key));
-    const $result = dom.id('stat-result-' + key);
-    $result.textContent = d100 + ' : ' + result;
-    $result.classList.remove(...$result.classList.values());
-    $result.classList.add("p-2", "rounded", "border", ...classes)
-  })
-}
 // Dés
 const d_compute = (event) => {
   event.preventDefault();
@@ -97,16 +101,19 @@ const d_compute = (event) => {
 
   result.innerHTML = '';
 
-  for (let n = 0; n < numbers_of_d; n++) {
-    result.appendChild(html.parse(
-      '<div class="flex-fill">' +
-      dice.dice_as_html(faces_of_d) +
-      '<span class="badge">' +
-      dice.roll(faces_of_d) +
-      '</span>' +
-      '</div>'
-    ));
-  }
+  dice.dice_as_html(faces_of_d).then(icon => {
+    for (let n = 0; n < numbers_of_d; n++) {
+      result.appendChild(html.parse(
+        '<div class="flex-fill">' +
+        icon +
+        '<span class="badge">' +
+        dice.roll(faces_of_d) +
+        '</span>' +
+        '</div>'
+      ));
+    }
+  })
+
 };
 
 dom.add_delegate_event(dom.id('d-launcher'), 'change', 'select', d_compute);

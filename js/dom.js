@@ -6,7 +6,7 @@ export const id = (id) => document.getElementById(id);
 
 /**
  * @param {string} selector
- * @return {NodeListOf<HTMLElementTagNameMap[*]>}
+ * @return {NodeListOf<HTMLElementTagNameMap[*]>|Array<HTMLElement>}
  */
 export const query = (selector) => document.querySelectorAll(selector);
 
@@ -21,10 +21,14 @@ export const add_event = (elem, type, callback) => {
 
 export const add_delegate_event = (elem, type, selector, callback) => {
   add_event(elem, type, (event) => {
-    const target = (/** @type {Element} */event.target);
+    let target = (/** @type {Element} */event.target);
+    do {
+      if (target.matches(selector)) {
+        return callback.call(this, event, target)
+      }
 
-    if (target.matches(selector)) {
-      return callback.call(this, event)
-    }
+      target = target.parentNode;
+    } while (target && target !== elem)
+
   })
 };
