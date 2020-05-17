@@ -34,53 +34,6 @@
     }
   </style>
   <script>
-    const d = (number) => Math.floor(Math.random() * Math.floor(number)) + 1;
-
-    const id = (id) => document.getElementById(id);
-
-    const query = (selector) => document.querySelectorAll(selector);
-
-    const parseHtml = (html) => {
-      const div = document.createElement('div');
-
-      div.innerHTML = html;
-
-      const frag = document.createDocumentFragment();
-
-      for (let i = 0, l = div.childNodes.length; i < l; i++) {
-        frag.appendChild(div.childNodes[i]);
-      }
-
-      return frag;
-    };
-
-    const dice = (number, small = false) => {
-      if (number > 12) {
-        number = 20
-      } else if (number > 10) {
-        number = 12
-      } else if (number > 8) {
-        number = 10
-      } else if (number > 6) {
-        number = 8
-      } else if (number > 4) {
-        number = 6
-      } else {
-        number = 4
-      }
-      const template = document.getElementById('dice-' + number);
-
-      const svg = document.importNode(template.content, true);
-
-      if (!small) {
-        svg.children[0].classList.add('fa-2x')
-      }
-      const div = document.createElement('div');
-      div.appendChild(svg);
-      return div.innerHTML;
-    }
-  </script>
-  <script>
     const STATISTIQUES = {
       learning: "Apprentissage",
       charisma: "Charisme",
@@ -88,7 +41,7 @@
       dexterity: "Dextérité",
       perception: "Perception",
       magic: "Pouvoir Magique",
-    }
+    };
   </script>
 </head>
 <body>
@@ -178,21 +131,6 @@
           Statistiques
         </div>
         <div class="card-body" id="stats">
-          <script>
-            for (let key in STATISTIQUES) {
-              document.write(
-                '<div class="form-row mb-1">' +
-                '<label for="stats-' + key + '" class="col-12 col-sm-3 col-lg-2 col-form-label">' + STATISTIQUES[key] + '</label>' +
-                '<div class="col-auto">' +
-                '<input type="number" class="form-control" id="stats-' + key + '" name="' + key + '" placeholder="10, 20, ...">' +
-                '</div>' +
-                '<div class="col-auto">' +
-                '<button class="btn btn-outline-primary stat-launch mr-2" id="stat-launch-' + key + '">&nbsp;' + dice(20, true) + '&nbsp;</button>&nbsp;' +
-                '<span id="stat-result-' + key + '"></span>' +
-                '</div>' +
-                '</div>');
-            }
-          </script>
         </div>
       </div>
     </div>
@@ -206,11 +144,6 @@
             <div class="col-sm-9">
               <select class="form-control" id="select-stat-1">
                 <option value="" selected disabled hidden>Choose here</option>
-                <script>
-                  for (let key in STATISTIQUES) {
-                    document.write('<option value="' + key + '">' + STATISTIQUES[key] + '</option>');
-                  }
-                </script>
               </select>
             </div>
             <div class="col-sm-3">
@@ -221,11 +154,6 @@
             <div class="col-sm-9">
               <select class="form-control" id="select-stat-2">
                 <option value="" selected disabled hidden>Choose here</option>
-                <script>
-                  for (let key in STATISTIQUES) {
-                    document.write('<option value="' + key + '">' + STATISTIQUES[key] + '</option>');
-                  }
-                </script>
               </select>
             </div>
             <div class="col-sm-3">
@@ -276,7 +204,7 @@
           Dés
         </div>
         <div class="card-body">
-          <form id="d-launcher" class="row" action="#">
+          <div id="d-launcher" class="row">
             <div class="col">
               <select class="form-control" id="d-numbers" name="d-numbers">
                 <option value="" selected disabled hidden>Numbers of D</option>
@@ -306,151 +234,18 @@
               </select>
             </div>
             <div class="col">
-              <button class="btn btn-primary" type="submit">Lancer</button>
+              <button class="btn btn-primary" type="button">Lancer</button>
             </div>
-          </form>
+          </div>
         </div>
         <div class="card-footer">
           <div id="d-result" class="d-flex">
-
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<script>
-  class Stats {
-    constructor() {
-      this.stats = {}
-    }
-
-    load() {
-      query('#stats input').forEach((input) => {
-        const name = input.name;
-        const value = parseInt(localStorage.getItem(name), 10);
-
-        if (typeof value === 'number') {
-          input.value = value;
-          this.set(name, value);
-        }
-      });
-    }
-
-    set(name, value) {
-      this.stats[name] = value;
-
-      localStorage.setItem(name, value);
-    }
-
-    get(name) {
-      return this.stats[name];
-    }
-  }
-</script>
-<script>
-  const stats = new Stats();
-
-  // Load statistics
-  stats.load();
-
-  // Save stats on update
-  id('stats').addEventListener('change', (event) => {
-    const target = (/** @type {HTMLInputElement} */ event.target);
-
-    stats.set(target.name, target.value);
-  });
-
-  const render_d100 = (d, stats) => {
-    let result, classes;
-    if (d <= 3) {
-      result = "Reussite Critique";
-      classes = ["border-success", 'bg-success', 'text-white'];
-    } else if (d >= 97) {
-      result = "Echec Critique";
-      classes = ["border-danger", 'bg-danger', 'text-white'];
-    } else if (d <= stats) {
-      result = 'Reussite';
-      classes = ["border-success"];
-    } else {
-      result = 'Echec';
-      classes = ["border-danger"];
-    }
-
-    return {result, classes}
-  };
-
-  // Calculate chance
-  id('calc').addEventListener('mouseup', (event) => {
-    const stat1 = parseInt(id('stat-1').value, 10);
-    const stat2 = parseInt(id('stat-2').value, 10);
-
-    const d20 = d(20);
-    id('chance-d20').textContent = '' + d20;
-
-    const chance = stat1 + stat2 - 100 - d20;
-    id('chance-need').textContent = '' + chance;
-
-
-    const d100 = d(100);
-    id('chance-d100').textContent = '' + d100;
-
-    const {result, classes} = render_d100(d100, chance);
-
-    const $result = id('result');
-
-    $result.textContent = result;
-    $result.classList.remove(...$result.classList.values());
-    $result.classList.add("p-2", "rounded", "border", ...classes)
-  });
-
-  // Register change on stats for chance
-  for (let i = 1; i < 3; i++) {
-    const select_id = 'select-stat-' + i;
-    const input_id = 'stat-' + i;
-
-    id(select_id).addEventListener('change', (event) => {
-      const select = (/** @type {HTMLSelectElement}*/id(select_id));
-
-      id(input_id).value = stats.get(select.value)
-    })
-  }
-
-  // launch stats
-  for (let key in STATISTIQUES) {
-    id('stat-launch-' + key).addEventListener('click', (event) => {
-      event.preventDefault();
-      const d100 = d(100);
-      const {result, classes} = render_d100(d100, stats.get(key));
-      const $result = id('stat-result-' + key);
-      $result.textContent = d100 + ' : ' + result;
-      $result.classList.remove(...$result.classList.values());
-      $result.classList.add("p-2", "rounded", "border", ...classes)
-    })
-  }
-  // Dés
-  const d_compute = (event) => {
-    event.preventDefault();
-
-    const numbers_of_d = parseInt(id('d-numbers').value, 10);
-    const faces_of_d = parseInt(id('d-faces').value, 10);
-
-    if (!numbers_of_d || !faces_of_d) {
-      return;
-    }
-
-    const result = id('d-result');
-
-    result.innerHTML = '';
-
-    for (let n = 0; n < numbers_of_d; n++) {
-      result.appendChild(parseHtml('<div class="flex-fill">' + dice(faces_of_d) + '<span class="badge">' + d(faces_of_d) + '</span></div>'));
-    }
-  };
-
-  id('d-launcher').addEventListener('change', d_compute);
-  id('d-launcher').addEventListener('submit', d_compute);
-
-</script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
