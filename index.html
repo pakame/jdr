@@ -1,0 +1,456 @@
+<html>
+<head>
+  <title>Chance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style>
+    .svg-inline--fa.fa-w-16 {
+      width: 1em;
+    }
+
+    .svg-inline--fa {
+      display: inline-block;
+      font-size: inherit;
+      height: 1em;
+      overflow: visible;
+      vertical-align: -0.125em;
+    }
+
+    .svg-inline--fa .fa-primary {
+      fill: var(--fa-primary-color, currentColor);
+      opacity: 1;
+      opacity: var(--fa-primary-opacity, 1);
+    }
+
+    .svg-inline--fa .fa-secondary {
+      fill: var(--fa-secondary-color, currentColor);
+      opacity: 0.4;
+      opacity: var(--fa-secondary-opacity, 0.4);
+    }
+
+    .fa-2x {
+      font-size: 2em;
+    }
+  </style>
+  <script>
+    const d = (number) => Math.floor(Math.random() * Math.floor(number)) + 1;
+
+    const id = (id) => document.getElementById(id);
+
+    const query = (selector) => document.querySelectorAll(selector);
+
+    const parseHtml = (html) => {
+      const div = document.createElement('div');
+
+      div.innerHTML = html;
+
+      const frag = document.createDocumentFragment();
+
+      for (let i = 0, l = div.childNodes.length; i < l; i++) {
+        frag.appendChild(div.childNodes[i]);
+      }
+
+      return frag;
+    };
+
+    const dice = (number, small = false) => {
+      if (number > 12) {
+        number = 20
+      } else if (number > 10) {
+        number = 12
+      } else if (number > 8) {
+        number = 10
+      } else if (number > 6) {
+        number = 8
+      } else if (number > 4) {
+        number = 6
+      } else {
+        number = 4
+      }
+      const template = document.getElementById('dice-' + number);
+
+      const svg = document.importNode(template.content, true);
+
+      if (!small) {
+        svg.children[0].classList.add('fa-2x')
+      }
+      const div = document.createElement('div');
+      div.appendChild(svg);
+      return div.innerHTML;
+    }
+  </script>
+  <script>
+    const STATISTIQUES = {
+      learning: "Apprentissage",
+      charisma: "Charisme",
+      strength: "Force",
+      dexterity: "Dextérité",
+      perception: "Perception",
+      magic: "Pouvoir Magique",
+    }
+  </script>
+</head>
+<body>
+<template id="dice-4">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d4" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-dice-d4 fa-w-16">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M239.81 8.53v494.94c0 7.15-7.87 11.11-13.17 6.64L3 321.3a8.82 8.82 0 0 1-1.35-11.82L225.28 3.34C230-3.1 239.8.4 239.81 8.53z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M272.2 503.47V8.53c0-8.13 9.8-11.63 14.52-5.19l223.6 306.14A8.79 8.79 0 0 1 509 321.3L285.37 510.11c-5.3 4.47-13.17.51-13.17-6.64z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<template id="dice-6">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d6" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-dice-d6 fa-w-14">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M25.87 124.42a8.54 8.54 0 0 1-.06-14.42l166-100.88a61.72 61.72 0 0 1 64.43 0L422.19 110a8.54 8.54 0 0 1-.05 14.47L224 242.55z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M0 161.83v197.7c0 23.77 12.11 45.74 31.79 57.7L184 509.71c10.67 6.48 24.05-1.54 24.05-14.44V271.46L12 154.58c-5.36-3.17-12 .85-12 7.25zm436-7.25L240 271.46v223.82c0 12.89 13.39 20.92 24.05 14.43l152.16-92.48c19.68-12 31.79-33.94 31.79-57.7v-197.7c0-6.41-6.64-10.42-12-7.25z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<template id="dice-8">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d8" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-dice-d8 fa-w-16">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M225.53 2.52L2.36 233.83a8.45 8.45 0 0 0 3.1 13.77l234.13 85.06V8.39a8.19 8.19 0 0 0-14.06-5.87zm284.11 231.31L286.47 2.52a8.19 8.19 0 0 0-14.06 5.88v324.27l234.13-85.06a8.46 8.46 0 0 0 3.1-13.78z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M469.87 296.61l-197.46 71.68V503.6a8.19 8.19 0 0 0 14.06 5.88l192-199.1c6.12-6.38-.39-16.75-8.6-13.77zM33.53 310.38l192 199.1a8.19 8.19 0 0 0 14.06-5.88V368.29L42.13 296.61c-8.21-2.98-14.72 7.39-8.6 13.77z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<template id="dice-10">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d10" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-dice-d10 fa-w-16">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M509 240.86L317.19 7c-6-7.37-17.39-.66-14.46 8.55L370.52 228l130.38 27.29c7.89 1.71 13.32-8.04 8.1-14.43zM194.8 7L3 240.86c-5.24 6.39.2 16.08 8.08 14.42L141.47 228l67.78-212.5c2.95-9.17-8.4-15.89-14.45-8.5zM248 6l-73.4 230.12 81.4 56.74 81.43-56.71L264 6a8.36 8.36 0 0 0-16 0z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M505.19 292.27l-144.06-30.11-88.2 61.44v179.54c0 7.59 8.55 11.65 14 6.66l222.15-202.2c5.31-4.82 3-13.89-3.89-15.33zm-498.38 0c-6.89 1.44-9.2 10.51-3.9 15.33l222.14 202.19c5.48 5 14 .93 14-6.67V323.6l-88.2-61.44z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<template id="dice-12">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d12" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-dice-d12 fa-w-16">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M7.54 176.92l123.62 123.62L240 246.11V139.24L59 74.07zM453 74.07l-181 65.17v106.87l108.84 54.42 123.62-123.62zM333.51 6.76A63.87 63.87 0 0 0 304.89 0H207.1a63.91 63.91 0 0 0-28.62 6.76L89.72 51.14 256 111l166.28-59.86z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M256 273.89l-108.59 54.29L206.23 512h99.53l58.82-183.82zM0 214.62v90.27a63.87 63.87 0 0 0 6.76 28.62l47.7 95.4a63.92 63.92 0 0 0 28.62 28.62L169 500.47l-55-171.91zm398.05 114L343 500.48l85.88-42.94a64 64 0 0 0 28.62-28.62l47.7-95.4a64.07 64.07 0 0 0 6.8-28.62v-90.27z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<template id="dice-20">
+  <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="dice-d20" role="img"
+       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512" class="svg-inline--fa fa-dice-d20 fa-w-15">
+    <g class="fa-group">
+      <path fill="currentColor"
+            d="M240 0a15.88 15.88 0 0 0-13.63 7.62L130.79 176h218.42L253.63 7.62A15.88 15.88 0 0 0 240 0zm-71.38 11.74L17.81 110.35a4 4 0 0 0 .13 6.78l81.53 48.69L179.4 22.88c4.34-7.06-3.59-15.25-10.78-11.14zm293.57 98.6l-150.81-98.6c-7.19-4.11-15.12 4.08-10.78 11.14l79.93 142.94 81.53-48.7a4 4 0 0 0 .13-6.78z"
+            class="fa-secondary"></path>
+      <path fill="currentColor"
+            d="M106.75 215.06L1.2 371a8 8 0 0 0 5.93 12.14l208.26 22.07zM7.41 315.43L82.7 193.08l-76.64-46A4 4 0 0 0 0 150.53v162.81a4 4 0 0 0 7.41 2.09zM18.25 423.6l194.4 87.66A8 8 0 0 0 224 504v-65.67L20.45 416a4 4 0 0 0-2.2 7.6zM139.57 208L240 383.75 340.43 208zM480 313.34V150.53a4 4 0 0 0-6.06-3.43l-76.64 46 75.29 122.35a4 4 0 0 0 7.41-2.11zM478.81 371L373.25 215.06l-108.63 190.1 208.26-22.07a8 8 0 0 0 5.93-12.09zm-19.26 45L256 438.32V504a8 8 0 0 0 11.35 7.26l194.4-87.66a4 4 0 0 0-2.2-7.6z"
+            class="fa-primary"></path>
+    </g>
+  </svg>
+</template>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card mt-4">
+        <div class="card-header">
+          Statistiques
+        </div>
+        <div class="card-body" id="stats">
+          <script>
+            for (let key in STATISTIQUES) {
+              document.write(
+                '<div class="form-row mb-1">' +
+                '<label for="stats-' + key + '" class="col-12 col-sm-3 col-lg-2 col-form-label">' + STATISTIQUES[key] + '</label>' +
+                '<div class="col-auto">' +
+                '<input type="number" class="form-control" id="stats-' + key + '" name="' + key + '" placeholder="10, 20, ...">' +
+                '</div>' +
+                '<div class="col-auto">' +
+                '<button class="btn btn-outline-primary stat-launch mr-2" id="stat-launch-' + key + '">&nbsp;' + dice(20, true) + '&nbsp;</button>&nbsp;' +
+                '<span id="stat-result-' + key + '"></span>' +
+                '</div>' +
+                '</div>');
+            }
+          </script>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-4">
+        <div class="card-header">
+          Chance
+        </div>
+        <div class="card-body">
+          <div class="row mb-1">
+            <div class="col-sm-9">
+              <select class="form-control" id="select-stat-1">
+                <option value="" selected disabled hidden>Choose here</option>
+                <script>
+                  for (let key in STATISTIQUES) {
+                    document.write('<option value="' + key + '">' + STATISTIQUES[key] + '</option>');
+                  }
+                </script>
+              </select>
+            </div>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="stat-1" placeholder="10, 20, ...">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-9">
+              <select class="form-control" id="select-stat-2">
+                <option value="" selected disabled hidden>Choose here</option>
+                <script>
+                  for (let key in STATISTIQUES) {
+                    document.write('<option value="' + key + '">' + STATISTIQUES[key] + '</option>');
+                  }
+                </script>
+              </select>
+            </div>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="stat-2" placeholder="10, 20, ...">
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-primary" id="calc">Get Lucky</button>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-3 col-form-label">
+                D20 :
+              </div>
+              <div class="col-sm-9 col-form-label">
+                <span id="chance-d20"></span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-3 col-form-label">
+                Chance :
+              </div>
+              <div class="col-sm-9 col-form-label">
+                <span id="chance-need"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-sm-3 col-form-label">
+              D100 : <span id="chance-d100"></span>
+            </div>
+            <div class="col-sm-9 col-form-label">
+              Resultat : <span id="result"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-4">
+        <div class="card-header">
+          Dés
+        </div>
+        <div class="card-body">
+          <form id="d-launcher" class="row" action="#">
+            <div class="col">
+              <select class="form-control" id="d-numbers" name="d-numbers">
+                <option value="" selected disabled hidden>Numbers of D</option>
+                <option value="1">1 D</option>
+                <option value="2">2 D</option>
+                <option value="3">3 D</option>
+                <option value="4">4 D</option>
+                <option value="5">5 D</option>
+                <option value="6">6 D</option>
+              </select>
+            </div>
+            <div class="col">
+              <select class="form-control" id="d-faces" name="d-faces">
+                <option value="" selected disabled hidden>Faces of D</option>
+                <option value="2">2 Faces</option>
+                <option value="3">3 Faces</option>
+                <option value="4">4 Faces</option>
+                <option value="5">5 Faces</option>
+                <option value="6">6 Faces</option>
+                <option value="7">7 Faces</option>
+                <option value="8">8 Faces</option>
+                <option value="9">9 Faces</option>
+                <option value="10">10 Faces</option>
+                <option value="12">12 Faces</option>
+                <option value="20">20 Faces</option>
+                <option value="100">100 Faces</option>
+              </select>
+            </div>
+            <div class="col">
+              <button class="btn btn-primary" type="submit">Lancer</button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer">
+          <div id="d-result" class="d-flex">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  class Stats {
+    constructor() {
+      this.stats = {}
+    }
+
+    load() {
+      query('#stats input').forEach((input) => {
+        const name = input.name;
+        const value = parseInt(localStorage.getItem(name), 10);
+
+        if (typeof value === 'number') {
+          input.value = value;
+          this.set(name, value);
+        }
+      });
+    }
+
+    set(name, value) {
+      this.stats[name] = value;
+
+      localStorage.setItem(name, value);
+    }
+
+    get(name) {
+      return this.stats[name];
+    }
+  }
+</script>
+<script>
+  const stats = new Stats();
+
+  // Load statistics
+  stats.load();
+
+  // Save stats on update
+  id('stats').addEventListener('change', (event) => {
+    const target = (/** @type {HTMLInputElement} */ event.target);
+
+    stats.set(target.name, target.value);
+  });
+
+  const render_d100 = (d, stats) => {
+    let result, classes;
+    if (d <= 3) {
+      result = "Reussite Critique";
+      classes = ["border-success", 'bg-success', 'text-white'];
+    } else if (d >= 97) {
+      result = "Echec Critique";
+      classes = ["border-danger", 'bg-danger', 'text-white'];
+    } else if (d <= stats) {
+      result = 'Reussite';
+      classes = ["border-success"];
+    } else {
+      result = 'Echec';
+      classes = ["border-danger"];
+    }
+
+    return {result, classes}
+  };
+
+  // Calculate chance
+  id('calc').addEventListener('mouseup', (event) => {
+    const stat1 = parseInt(id('stat-1').value, 10);
+    const stat2 = parseInt(id('stat-2').value, 10);
+
+    const d20 = d(20);
+    id('chance-d20').textContent = '' + d20;
+
+    const chance = stat1 + stat2 - 100 - d20;
+    id('chance-need').textContent = '' + chance;
+
+
+    const d100 = d(100);
+    id('chance-d100').textContent = '' + d100;
+
+    const {result, classes} = render_d100(d100, chance);
+
+    const $result = id('result');
+
+    $result.textContent = result;
+    $result.classList.remove(...$result.classList.values());
+    $result.classList.add("p-2", "rounded", "border", ...classes)
+  });
+
+  // Register change on stats for chance
+  for (let i = 1; i < 3; i++) {
+    const select_id = 'select-stat-' + i;
+    const input_id = 'stat-' + i;
+
+    id(select_id).addEventListener('change', (event) => {
+      const select = (/** @type {HTMLSelectElement}*/id(select_id));
+
+      id(input_id).value = stats.get(select.value)
+    })
+  }
+
+  // launch stats
+  for (let key in STATISTIQUES) {
+    id('stat-launch-' + key).addEventListener('click', (event) => {
+      event.preventDefault();
+      const d100 = d(100);
+      const {result, classes} = render_d100(d100, stats.get(key));
+      const $result = id('stat-result-' + key);
+      $result.textContent = d100 + ' : ' + result;
+      $result.classList.remove(...$result.classList.values());
+      $result.classList.add("p-2", "rounded", "border", ...classes)
+    })
+  }
+  // Dés
+  const d_compute = (event) => {
+    event.preventDefault();
+
+    const numbers_of_d = parseInt(id('d-numbers').value, 10);
+    const faces_of_d = parseInt(id('d-faces').value, 10);
+
+    if (!numbers_of_d || !faces_of_d) {
+      return;
+    }
+
+    const result = id('d-result');
+
+    result.innerHTML = '';
+
+    for (let n = 0; n < numbers_of_d; n++) {
+      result.appendChild(parseHtml('<div class="flex-fill">' + dice(faces_of_d) + '<span class="badge">' + d(faces_of_d) + '</span></div>'));
+    }
+  };
+
+  id('d-launcher').addEventListener('change', d_compute);
+  id('d-launcher').addEventListener('submit', d_compute);
+
+</script>
+</body>
+</html>
