@@ -22,13 +22,13 @@ export const add_event = (elem, type, callback) => {
 export const add_delegate_event = (elem, type, selector, callback) => {
   add_event(elem, type, (event) => {
     let target = (/** @type {Element} */event.target);
-    do {
+
+    while (target !== elem && !target.isSameNode(document)) {
       if (target.matches(selector)) {
         return callback.call(this, event, target)
       }
 
       target = target.parentNode;
-    } while (target && target !== elem)
-
+    }
   })
 };
