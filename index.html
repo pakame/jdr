@@ -1,12 +1,33 @@
 <html>
 <head>
-  <title>Chance</title>
+  <title>JDR - Stats & D roller</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preload" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <style>
-    .svg-inline--fa.fa-w-16 {
-      width: 1em;
+
+    .fa-lg {
+      font-size: 1.33333em;
+      line-height: .75em;
+      vertical-align: -.0667em;
+    }
+
+    .fa-2x {
+      font-size: 2em;
+    }
+
+    .fa-3x {
+      font-size: 3em;
+    }
+
+    .fa-4x {
+      font-size: 4em;
+    }
+
+    .fa-5x {
+      font-size: 5em;
     }
 
     .svg-inline--fa {
@@ -17,26 +38,18 @@
       vertical-align: -0.125em;
     }
 
+    .svg-inline--fa.fa-w-16 {
+      width: 1em;
+    }
+
     .svg-inline--fa .fa-primary {
-      fill: var(--fa-primary-color, currentColor);
+      fill: currentColor;
       opacity: 1;
-      opacity: var(--fa-primary-opacity, 1);
     }
 
     .svg-inline--fa .fa-secondary {
-      fill: var(--fa-secondary-color, currentColor);
+      fill: currentColor;
       opacity: 0.4;
-      opacity: var(--fa-secondary-opacity, 0.4);
-    }
-
-    .fa-lg {
-      font-size: 1.33333em;
-      line-height: .75em;
-      vertical-align: -.0667em;
-    }
-
-    .fa-2x {
-      font-size: 2em;
     }
 
     .svg-inline--fa.fa-lg {
@@ -94,7 +107,7 @@
           </div>
         </div>
         <div class="card-body">
-          <button class="btn btn-primary" id="calc">Get Lucky</button>
+          <button class="btn btn-outline-primary" id="calc">Get Lucky</button>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
@@ -130,8 +143,7 @@
           <div id="d-launcher" class="row">
             <div class="col">
               <select class="form-control" id="d-numbers" name="d-numbers">
-                <option value="" selected disabled hidden>Numbers of D</option>
-                <option value="1">1 D</option>
+                <option value="1" selected>1 D</option>
                 <option value="2">2 D</option>
                 <option value="3">3 D</option>
                 <option value="4">4 D</option>
@@ -141,7 +153,6 @@
             </div>
             <div class="col">
               <select class="form-control" id="d-faces" name="d-faces">
-                <option value="" selected disabled hidden>Faces of D</option>
                 <option value="2">2 Faces</option>
                 <option value="3">3 Faces</option>
                 <option value="4">4 Faces</option>
@@ -153,11 +164,11 @@
                 <option value="10">10 Faces</option>
                 <option value="12">12 Faces</option>
                 <option value="20">20 Faces</option>
-                <option value="100">100 Faces</option>
+                <option value="100" selected>100 Faces</option>
               </select>
             </div>
             <div class="col">
-              <button class="btn btn-primary" type="button">Lancer</button>
+              <button class="btn btn-outline-primary" type="button">Lancer</button>
             </div>
           </div>
         </div>

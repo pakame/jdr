@@ -7,16 +7,14 @@ export const svg = (name) => {
   if (typeof cache[name] === 'string') {
     return Promise.resolve(cache[name])
   }
+
   if (cache[name] instanceof Promise) {
     return cache[name]
   }
 
   return cache[name] = fetch('svg/' + name + '.svg')
-    .then((response) => {
-      return response.text();
-    }).then((content) => {
-      return cache[name] = content;
-    })
+    .then((response) => response.text())
+    .then((content) => cache[name] = content)
 };
 
 export const auto = () => {
