@@ -58,7 +58,7 @@ export const render = (dice, roll, stats, critical = 3) => {
 
   if (crit) {
     return parse(
-      "<span class='d-inline-block col-form-label px-2 rounded border border-" + color + " bg-" + color + " text-white'>" +
+      "<span class='d-inline-block w-auto form-control rounded border border-" + color + " bg-" + color + " text-white'>" +
       "<span class='badge badge-light'>" + roll + "</span>" +
       " " + result + " Critique" +
       "</span>"
@@ -66,7 +66,7 @@ export const render = (dice, roll, stats, critical = 3) => {
   }
 
   return parse(
-    "<span class='d-inline-block col-form-label px-2 rounded border border-" + color + "'>" +
+    "<span class='d-inline-block w-auto form-control rounded border border-" + color + "'>" +
     "<span class='badge badge-" + color + "'>" + roll + "</span>" +
     " " + result +
     "</span>"

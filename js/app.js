@@ -2,6 +2,7 @@ import * as dom from "./dom.js";
 import * as dice from "./dice.js";
 import * as html from "./html.js";
 import * as icon from "./icons.js"
+import {stringify} from "./html.js";
 import Stats from "./stats.js";
 
 const stats = new Stats(Object.keys(STATISTIQUES));
@@ -102,13 +103,19 @@ const d_compute = (event) => {
 
   result.innerHTML = '';
 
-  dice.dice_as_html(faces_of_d).then(icon => {
+  dice.dice(faces_of_d).then(icon => {
+    icon.children[0].classList.add('fa-stack-2x');
+
     for (let n = 0; n < numbers_of_d; n++) {
       result.appendChild(html.parse(
-        '<div class="flex-fill">' +
-        icon +
-        '<span class="badge">' +
+        '<div class="col-4 mb-3">' +
+        '<span class="fa-stack fa-2x">' +
+        stringify(icon) +
+        '<span class="fa-stack-1x">' +
+        '<span class="rounded-lg bg-light small font-weight-bold" style="padding: 0.05em 0.2em">' +
         dice.roll(faces_of_d) +
+        '</span>' +
+        '</span>' +
         '</span>' +
         '</div>'
       ));
