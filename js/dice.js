@@ -34,24 +34,41 @@ export const dice_as_html = (number, size = '2x') => {
 };
 
 export const render = (dice, roll, stats, critical = 3) => {
+  let crit = false;
   const critical_success = critical;
   const critical_failure = dice - critical;
 
-  let result, classes;
+  let result, color;
 
   if (roll <= critical_success) {
-    result = "Reussite Critique";
-    classes = ["border-success", 'bg-success', 'text-white'];
+    crit = true;
+    result = "Reussite";
+    color = "success";
   } else if (roll > critical_failure) {
-    result = "Echec Critique";
-    classes = ["border-danger", 'bg-danger', 'text-white'];
+    crit = true;
+    result = "Echec";
+    color = "danger";
   } else if (roll <= stats) {
-    result = 'Reussite';
-    classes = ["border-success"];
+    result = "Reussite";
+    color = "success";
   } else {
-    result = 'Echec';
-    classes = ["border-danger"];
+    result = "Echec";
+    color = "danger";
   }
 
-  return {result, classes}
+  if (crit) {
+    return parse(
+      "<span class='d-inline-block col-form-label px-2 rounded border border-" + color + " bg-" + color + " text-white'>" +
+      "<span class='badge badge-light'>" + roll + "</span>" +
+      " " + result + " Critique" +
+      "</span>"
+    );
+  }
+
+  return parse(
+    "<span class='d-inline-block col-form-label px-2 rounded border border-" + color + "'>" +
+    "<span class='badge badge-" + color + "'>" + roll + "</span>" +
+    " " + result +
+    "</span>"
+  );
 };

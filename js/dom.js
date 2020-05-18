@@ -10,6 +10,21 @@ export const id = (id) => document.getElementById(id);
  */
 export const query = (selector) => document.querySelectorAll(selector);
 
+export const empty = (elem) => {
+  let n = elem.childNodes.length;
+
+  while (n) {
+    elem.removeChild(elem.childNodes[0]);
+    n--;
+  }
+};
+
+export const content = (elem, content) => {
+  empty(elem);
+
+  elem.appendChild(content);
+};
+
 /**
  * @param {Element} elem
  * @param {string} type

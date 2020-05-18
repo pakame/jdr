@@ -12,6 +12,7 @@ stats.load();
 // auto load icon
 icon.auto();
 
+// Generate contents
 for (let key in STATISTIQUES) {
   dice.dice_as_html(100, 'lg').then((icon) => {
     dom.id('stats').appendChild(html.parse(
@@ -22,6 +23,8 @@ for (let key in STATISTIQUES) {
       '</div>' +
       '<div class="col-auto">' +
       '<button class="btn btn-outline-primary stat-launch mr-2" name="' + key + '">&nbsp;' + icon + '&nbsp;</button>&nbsp;' +
+      '</div>' +
+      '<div class="col-auto">' +
       '<span class="result"></span>' +
       '</div>' +
       '</div>'
@@ -43,11 +46,12 @@ dom.add_delegate_event(dom.id('stats'), 'change', 'input', (event) => {
 dom.add_delegate_event(dom.id('stats'), 'click', 'button', (event, target) => {
   event.preventDefault();
   const d100 = dice.roll(100);
-  const {result, classes} = dice.render(100, d100, stats.get(target.name));
-  const $result = target.nextElementSibling;
-  $result.textContent = d100 + ' : ' + result;
-  $result.classList.remove(...$result.classList.values());
-  $result.classList.add("p-2", "rounded", "border", ...classes)
+  const $result = target.parentElement.nextElementSibling;
+
+  dom.content(
+    $result,
+    dice.render(100, d100, stats.get(target.name))
+  );
 });
 
 // Calculate chance
@@ -65,13 +69,10 @@ dom.add_event(dom.id('calc'), 'mouseup', (event) => {
   const d100 = dice.roll(100);
   dom.id('chance-d100').textContent = '' + d100;
 
-  const {result, classes} = dice.render(100, d100, chance);
-
-  const $result = dom.id('result');
-
-  $result.textContent = result;
-  $result.classList.remove(...$result.classList.values());
-  $result.classList.add("p-2", "rounded", "border", ...classes)
+  dom.content(
+    dom.id('result'),
+    dice.render(100, d100, chance)
+  )
 });
 
 // Register change on stats for chance
