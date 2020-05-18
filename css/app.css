@@ -1,0 +1,61 @@
+
+.svg-inline--fa {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+}
+
+.svg-inline--fa.fa-w-16 {
+    width: 1em;
+}
+
+.svg-inline--fa .fa-primary {
+    fill: currentColor;
+    opacity: 1;
+}
+
+.svg-inline--fa .fa-secondary {
+    fill: currentColor;
+    opacity: 0.4;
+}
+
+.fa-lg {
+    font-size: 1.33333em;
+    line-height: .75em;
+    vertical-align: -.0667em;
+}
+
+.svg-inline--fa.fa-lg {
+    vertical-align: -0.225em;
+}
+
+.fa-2x {
+    font-size: 2em;
+}
+
+.fa-3x {
+    font-size: 3em;
+}
+
+.fa-4x {
+    font-size: 4em;
+}
+
+.fa-5x {
+    font-size: 5em;
+}
+
+/* Force no top radius on rounded-bottom */
+.rounded-bottom {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+
+/* Force no bottom radius on rounded-top */
+.rounded-top {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
