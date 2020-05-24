@@ -1,5 +1,6 @@
 import {parse, stringify} from "./html.js";
 import {svg} from "./icons.js";
+import {elem} from "./dom.js";
 
 const dice_number = (number) => {
   if (number > 20) {
@@ -57,18 +58,22 @@ export const render = (dice, roll, stats, critical = 3) => {
   }
 
   if (crit) {
-    return parse(
-      "<span class='d-inline-block w-auto form-control rounded border border-" + color + " bg-" + color + " text-white'>" +
-      "<span class='badge badge-light'>" + roll + "</span>" +
-      " " + result + " Critique" +
-      "</span>"
-    );
+    return elem('span', {
+      classes: "d-inline-block w-auto rounded border border-" + color + " bg-" + color + " text-white",
+      attrs: {style: 'padding:0.375rem'},
+      body: [
+        elem('span', {classes: 'mr-1 badge badge-light', body: roll}),
+        result + " Critique",
+      ]
+    });
   }
 
-  return parse(
-    "<span class='d-inline-block w-auto form-control rounded border border-" + color + "'>" +
-    "<span class='badge badge-" + color + "'>" + roll + "</span>" +
-    " " + result +
-    "</span>"
-  );
+  return elem('span', {
+    classes: "d-inline-block w-auto rounded border border-" + color,
+    attrs: {style: 'padding:0.375rem'},
+    body: [
+      elem('span', {classes: 'mr-1 badge badge-' + color, body: roll}),
+      result,
+    ]
+  });
 };
