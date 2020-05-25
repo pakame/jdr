@@ -48,6 +48,26 @@ const load_player = (player) => {
             }),
             dom.elem('div', {
               classes: 'col-auto',
+              body: dom.elem('select', {
+                classes: 'form-control custom-select',
+                attrs: {id: 'bonus-malus-' + key, name: key + "-bonus-malus"},
+                body: [
+                  dom.elem('option', {attrs: {value: -30}, body: '-30'}),
+                  dom.elem('option', {attrs: {value: -20}, body: '-20'}),
+                  dom.elem('option', {attrs: {value: -15}, body: '-15'}),
+                  dom.elem('option', {attrs: {value: -10}, body: '-10'}),
+                  dom.elem('option', {attrs: {value: -5}, body: '-5'}),
+                  dom.elem('option', {attrs: {value: 0, selected: true}, body: '±0'}),
+                  dom.elem('option', {attrs: {value: 5}, body: '+5'}),
+                  dom.elem('option', {attrs: {value: 10}, body: '+10'}),
+                  dom.elem('option', {attrs: {value: 15}, body: '+15'}),
+                  dom.elem('option', {attrs: {value: 20}, body: '+20'}),
+                  dom.elem('option', {attrs: {value: 30}, body: '+30'}),
+                ]
+              })
+            }),
+            dom.elem('div', {
+              classes: 'col-auto',
               body: dom.elem('button', {
                 classes: 'btn btn-primary stat-launch mr-2 rolling-on-click',
                 attrs: {type: 'button', name: key},
@@ -70,10 +90,20 @@ const load_player = (player) => {
   }
 
   // Save stats on update
-  dom.add_delegate_event(dom.id('stats'), 'change', 'input', (event) => {
-    const target = (/** @type {HTMLInputElement} */ event.target);
-
+  dom.add_delegate_event(dom.id('stats'), 'change', 'input', (event, target) => {
     stats.set(target.name, target.value);
+  });
+
+  dom.add_delegate_event(dom.id('stats'), 'change', 'select', (event, target) => {
+    const value = parseInt(target.value);
+
+    target.classList.remove('border-success', 'border-danger');
+
+    if (value > 0) {
+      target.classList.add('border-success');
+    } else if (value < 0) {
+      target.classList.add('border-danger')
+    }
   });
 
   // launch stats
@@ -94,9 +124,11 @@ const load_player = (player) => {
       const d100 = dice.roll(100);
       const $result = target.parentElement.nextElementSibling;
 
+      const stat = stats.get(target.name) + parseInt(dom.id('bonus-malus-' + target.name).value);
+
       dom.content(
         $result,
-        dice.render(100, d100, stats.get(target.name))
+        dice.render(100, d100, stat)
       );
     }, DICE_ROLLING)
   });
