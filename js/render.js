@@ -11,7 +11,10 @@ const row = (content) => {
 };
 
 const card = (content) => {
-  const card = dom.elem('div', {classes: ['card h-100'].concat(content?.class || [])});
+  const card = dom.elem('div', {
+    classes: ['card h-100'].concat(content?.class || []),
+    attrs: content.attrs
+  });
 
   if (content.header) {
     card.appendChild(dom.elem('div', {classes: 'card-header', body: render(content.header)}))
@@ -32,7 +35,10 @@ const card = (content) => {
 };
 
 const table = (content) => {
-  const table = dom.elem('table', {classes: ['table small'].concat(content?.class || [])});
+  const table = dom.elem('table', {
+    classes: ['table small'].concat(content.class || []),
+    attrs: content.attrs
+  });
 
   if (content.headers) {
     const head = dom.elem('tr');
@@ -56,20 +62,57 @@ const table = (content) => {
   return table;
 };
 
+const text = (content) => {
+  return dom.elem('span', {
+    classes: content.class,
+    body: render(content.text)
+  })
+};
+
+const paragraph = (content) => {
+  return dom.elem('p', {
+    classes: content.class,
+    attrs: content.attrs,
+    body: render(content.text)
+  })
+};
+
+const block = (content) => {
+  return dom.elem('div', {
+    classes: content.class,
+    attrs: content.attrs,
+    body: render(content.body)
+  })
+};
+
+const raw = (content) => {
+  return dom.elem(content.tag, {
+    classes: content.class,
+    attrs: content.attrs,
+    body: render(content.body)
+  })
+};
+
 /**
  * @param content
  *
  * @return {Node}
  */
 const render = (content) => {
+  if (Array.isArray(content)) {
+    const frag = document.createDocumentFragment();
+
+    for (let item of content) {
+      frag.appendChild(render(item));
+    }
+
+    return frag;
+  }
+
   switch (typeof content) {
     case "number":
     case "string":
       return document.createTextNode(content);
-  }
-
-  if (Array.isArray(content)) {
-    content = {type: 'row', blocks: content}
   }
 
   switch (content.type) {
@@ -78,7 +121,18 @@ const render = (content) => {
     case 'card':
       return card(content);
     case 'table':
-      return table(content)
+      return table(content);
+    case 'div':
+    case 'block':
+      return block(content);
+    case 'span':
+    case 'text':
+      return text(content);
+    case 'p':
+    case 'paragraph':
+      return paragraph(content);
+    case 'raw':
+      return raw(content)
   }
 };
 

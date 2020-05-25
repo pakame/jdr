@@ -16,106 +16,121 @@
         "type": "row",
         "blocks": [
           {
-            "type": "card",
-            "header": "Sorts domestique",
-            "body": {
-              "type": "table",
-              "headers": [
-                "Nom",
-                "Description"
-              ],
-              "data": [
-                [
-                  "Accio",
-                  "Attire un petit objet (non vivant)"
+            "type": "div",
+            "class": "card h-100",
+            "body": [
+              {
+                "type": "div",
+                "class": "card-header bg-transparent text-success",
+                "body": "Sorts domestique"
+              },
+              {
+                "type": "table",
+                "class": "card-body",
+                "headers": [
+                  "Nom",
+                  "Description"
                 ],
-                [
-                  "Alohomora",
-                  "Ouvre une serrure"
-                ],
-                [
-                  "Amplificatum / reducto",
-                  "Grossit / rétrécit un objet (non vivant)"
-                ],
-                [
-                  "Cracbadaboum",
-                  "Déchire un tissu"
-                ],
-                [
-                  "Lumos / nox",
-                  "Allumer / éteindre sa baguette"
-                ],
-                [
-                  "Periculum",
-                  "Etincelles de détresse"
-                ],
-                [
-                  "Pointe au nord",
-                  "Indique le nord"
-                ],
-                [
-                  "Wingardium Leviosa",
-                  "Fait léviter un petit objet"
+                "data": [
+                  [
+                    "Accio",
+                    "Attire un petit objet (non vivant)"
+                  ],
+                  [
+                    "Alohomora",
+                    "Ouvre une serrure"
+                  ],
+                  [
+                    "Amplificatum / reducto",
+                    "Grossit / rétrécit un objet (non vivant)"
+                  ],
+                  [
+                    "Cracbadaboum",
+                    "Déchire un tissu"
+                  ],
+                  [
+                    "Lumos / nox",
+                    "Allumer / éteindre sa baguette"
+                  ],
+                  [
+                    "Periculum",
+                    "Etincelles de détresse"
+                  ],
+                  [
+                    "Pointe au nord",
+                    "Indique le nord"
+                  ],
+                  [
+                    "Wingardium Leviosa",
+                    "Fait léviter un petit objet"
+                  ]
                 ]
-              ]
-            }
+              }
+            ]
           },
           {
-            "type": "card",
-            "header": "Sorts offensif",
-            "body": {
-              "type": "table",
-              "headers": [
-                "Nom",
-                "Description"
-              ],
-              "data": [
-                [
-                  "Calvorio",
-                  "Fait disparaitre les cheveux"
+            "type": "div",
+            "class": "card h-100",
+            "body": [
+              {
+                "type": "div",
+                "class": "card-header bg-transparent text-danger",
+                "body": "Sorts offensif"
+              },
+              {
+                "type": "table",
+                "headers": [
+                  "Nom",
+                  "Description"
                 ],
-                [
-                  "Confungo",
-                  "Etourdit la cible / la rend confuse"
-                ],
-                [
-                  "Crache-Limace",
-                  "Fait vomir des limaces"
-                ],
-                [
-                  "Expelliarmus",
-                  "Désarme la cible"
-                ],
-                [
-                  "Incarcerem / Lashlabask",
-                  "Ligote / libère une cible"
-                ],
-                [
-                  "Lapsus",
-                  "Fait tomber la cible (croche pied)"
-                ],
-                [
-                  "Locomotor Wilbby",
-                  "Colle les 2 jambes entre elles"
-                ],
-                [
-                  "Mucus Ad nauseam",
-                  "Fait sortir des crottes de nez"
-                ],
-                [
-                  "Petrificus totalus",
-                  "Pétrifie la cible"
-                ],
-                [
-                  "Rictusempra",
-                  "Chatouille la cible"
-                ],
-                [
-                  "Tarentagella",
-                  "Fait danser la cible"
+                "data": [
+                  [
+                    "Calvorio",
+                    "Fait disparaitre les cheveux"
+                  ],
+                  [
+                    "Confungo",
+                    "Etourdit la cible / la rend confuse"
+                  ],
+                  [
+                    "Crache-Limace",
+                    "Fait vomir des limaces"
+                  ],
+                  [
+                    "Expelliarmus",
+                    "Désarme la cible"
+                  ],
+                  [
+                    "Incarcerem / Lashlabask",
+                    "Ligote / libère une cible"
+                  ],
+                  [
+                    "Lapsus",
+                    "Fait tomber la cible (croche pied)"
+                  ],
+                  [
+                    "Locomotor Wilbby",
+                    "Colle les 2 jambes entre elles"
+                  ],
+                  [
+                    "Mucus Ad nauseam",
+                    "Fait sortir des crottes de nez"
+                  ],
+                  [
+                    "Petrificus totalus",
+                    "Pétrifie la cible"
+                  ],
+                  [
+                    "Rictusempra",
+                    "Chatouille la cible"
+                  ],
+                  [
+                    "Tarentagella",
+                    "Fait danser la cible"
+                  ]
                 ]
-              ]
-            }
+              }
+            ]
           }
         ]
       }
