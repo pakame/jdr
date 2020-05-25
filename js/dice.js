@@ -1,6 +1,8 @@
 import {parse, stringify} from "./html.js";
 import {svg} from "./icons.js";
-import {elem} from "./dom.js";
+import {content, elem} from "./dom.js";
+
+const DICE_ROLLING = 600; // ms
 
 const dice_number = (number) => {
   if (number > 20) {
@@ -34,6 +36,51 @@ export const dice_as_html = (number, size = '2x') => {
   return dice(number, size).then(stringify)
 };
 
+export const dice_roll = (number, size, rolling) => {
+  return dice(number, 'stack-2x').then((icon) => {
+
+    const d = elem('span', {
+      classes: 'fa-stack',
+      body: icon
+    });
+
+    if (size) {
+      d.classList.add('fa-' + size)
+    }
+
+    if (rolling) {
+      d.classList.add('rolling')
+    }
+
+    const dice_roll = roll(number);
+
+    const res = elem('span', {
+      classes: 'fa-stack-1x',
+      body: elem('span', {
+        classes: 'rounded-lg bg-light small font-weight-bold',
+        attrs: {style: 'padding: 0.05em 0.2em'},
+        body: dice_roll
+      })
+    });
+
+    let promise;
+    if (rolling) {
+      promise = new Promise((r) => {
+        setTimeout(() => {
+          d.classList.remove('rolling');
+          content(d, res);
+
+          r(dice_roll)
+        }, DICE_ROLLING)
+      })
+    } else {
+      promise = Promise.resolve(dice_roll);
+      content(d, res);
+    }
+
+    return {d, promise}
+  })
+};
 export const render = (dice, roll, stats, critical = 3) => {
   let crit = false;
   const critical_success = critical;

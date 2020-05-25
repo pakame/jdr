@@ -75,7 +75,7 @@
               <div class="row mb-1">
                 <div class="col-sm-9">
                   <select class="form-control custom-select" id="select-stat-1">
-                    <option value="" selected disabled hidden>Choose here</option>
+                    <option value="" selected disabled>Choose here</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
@@ -85,7 +85,7 @@
               <div class="row">
                 <div class="col-sm-9">
                   <select class="form-control custom-select" id="select-stat-2">
-                    <option value="" selected disabled hidden>Choose here</option>
+                    <option value="" selected disabled>Choose here</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
@@ -98,22 +98,13 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
-                <div class="row">
-                  <div class="col-sm-3 col-form-label">
-                    <span title="D20"><i class="svg-load" data-name="dice-12"></i></span> : <span
-                    id="chance-d20"></span>
-                  </div>
-                  <div class="col-sm-9 col-form-label">
-                    Chance : <span id="chance-need"></span>
-                  </div>
-                </div>
+                Chance : <span id="chance-formula">...</span>
               </li>
             </ul>
             <div class="card-footer">
               <div class="row">
                 <div class="col-sm-3 col-form-label">
-                  <span title="D100"><i class="svg-load" data-name="dice-20" data-size="lg"></i></span> : <span
-                  id="chance-d100"></span>
+                  <span title="D100" id="chance-d100"><i class="svg-load" data-name="dice-20" data-size="2x"></i></span>
                 </div>
                 <div class="col-sm-9 col-form-label">
                   Resultat : <span id="result"></span>

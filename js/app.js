@@ -9,18 +9,21 @@ import ready from "./ready.js";
 const DICE_ROLLING = 600; // ms
 
 const load_player = (player) => {
-
   const STATISTIQUES = player.statistics;
   const stats = new Stats(Object.keys(STATISTIQUES));
 
-// Load statistics
+  // Load statistics
   stats.load();
 
-// auto load icon
+  // auto load icon
   icon.auto();
 
-// Generate contents
+  // Generate contents
   for (let key in STATISTIQUES) {
+    if (!STATISTIQUES.hasOwnProperty(key)) {
+      continue;
+    }
+
     const stats_label = STATISTIQUES[key];
     dice.dice(100, 'lg').then((icon) => {
       dom.id('stats').appendChild(
@@ -38,6 +41,7 @@ const load_player = (player) => {
                 classes: 'form-control',
                 attrs: {
                   id: 'stats-' + key, type: 'number', name: key, value: stats.get(key),
+                  size: 2, maxlength: 2,
                   placeholder: 'Enter your stats for ' + stats_label
                 }
               })
@@ -99,24 +103,44 @@ const load_player = (player) => {
 
   // Calculate chance
   dom.add_event(dom.id('calc'), 'mouseup', (event) => {
+    dom.id('calc').disabled = true;
     const stat1 = parseInt(dom.id('stat-1').value, 10);
     const stat2 = parseInt(dom.id('stat-2').value, 10);
+    const chance_formula = dom.id('chance-formula');
 
-    const d20 = dice.roll(20);
-    dom.id('chance-d20').textContent = '' + d20;
+    dice.dice_roll(20, null, true)
+      .then(({d, promise}) => {
+        dom.empty(chance_formula);
+        dom.content(chance_formula, "( " + stat1 + " + " + stat2 + " ) - 100 - ");
+        dom.content(chance_formula, d);
 
-    const chance = stat1 + stat2 - 100 - d20;
-    dom.id('chance-need').textContent = '' + chance;
+        return promise
+      })
+      .then((d20) => {
+        const chance = stat1 + stat2 - 100 - d20;
 
-    const d100 = dice.roll(100);
-    dom.id('chance-d100').textContent = '' + d100;
+        dom.content(chance_formula, [" = ", dom.elem('span', {classes: 'badge badge-primary', body: chance})]);
 
-    const $result = dom.id('result');
-    dom.empty($result);
-    dom.content(
-      $result,
-      dice.render(100, d100, chance)
-    )
+        return chance;
+      })
+      .then((chance) => {
+        return dice.dice_roll(100, null, true)
+          .then(({d, promise}) => {
+            const chance_d100 = dom.id('chance-d100');
+            dom.empty(chance_d100);
+            dom.content(chance_d100, d);
+
+            return promise;
+          })
+          .then((d100) => {
+            const $result = dom.id('result');
+            dom.empty($result);
+            dom.content($result, dice.render(100, d100, chance))
+          });
+      })
+      .then(() => {
+        dom.id('calc').disabled = false;
+      })
   });
 
   // Register change on stats for chance
@@ -147,31 +171,12 @@ const load_player = (player) => {
     dom.empty(result);
 
     for (let n = 0; n < numbers_of_d; n++) {
-      dice.dice(faces_of_d).then((icon) => {
-        icon.firstElementChild.classList.add('fa-stack-2x');
-
-        const res = dom.elem('span', {
-          classes: 'fa-stack-1x',
-        });
-        const d = dom.elem('span', {
-          classes: 'fa-stack fa-2x rolling',
-          body: [icon, res]
-        });
-
+      dice.dice_roll(faces_of_d, "2x", true).then(({d}) => {
         result.appendChild(dom.elem('div', {
           classes: 'col-4 mb-3',
           body: d
         }));
-
-        setTimeout(() => {
-          d.classList.remove('rolling');
-          dom.content(res, dom.elem('span', {
-            classes: 'rounded-lg bg-light small font-weight-bold',
-            attrs: {style: 'padding: 0.05em 0.2em'},
-            body: dice.roll(faces_of_d)
-          }))
-        }, DICE_ROLLING)
-      })
+      });
     }
   };
 

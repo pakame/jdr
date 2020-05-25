@@ -63,7 +63,7 @@ export const elem = (tag, {classes, attrs, body} = {}) => {
     }
 
     for (let c of classes) {
-      elem.classList.add(...(c.split(" ")));
+      elem.classList.add(...(c.trim().split(" ")));
     }
   }
   if (attrs) {
