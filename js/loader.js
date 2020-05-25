@@ -5,5 +5,14 @@ export const show = () => {
 };
 
 export const hide = () => {
-  dom.id('loader').style.display = 'none';
+
+  dom.id('loader').classList.add('fade-out');
+
+  setTimeout(() => {
+    const loader = dom.id('loader');
+
+    loader.classList.remove('fade-out');
+    loader.style.display = 'none';
+
+  }, 1000);
 };

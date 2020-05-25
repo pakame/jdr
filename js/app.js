@@ -218,5 +218,7 @@ fetch('game.json')
     load_player(game.player);
     load_tabs(game.tabs);
 
-    ready(loader.hide);
+    ready(() => {
+      setTimeout(loader.hide, 300)
+    });
   });

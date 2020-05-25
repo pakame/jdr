@@ -92,8 +92,8 @@
     background-color: var(--light, #fff);
     -webkit-mask: url(../svg/dice-20.svg) no-repeat center;
     mask: url(../svg/dice-20.svg) no-repeat center;
-    -webkit-animation: rotate-center 0.6s ease-in-out infinite both;
-    animation: rotate-center 0.6s ease-in-out infinite both;
+    -webkit-animation: rotate-center 1s linear infinite both;
+    animation: rotate-center 1s linear infinite both;
 }
 .rolling {
 
@@ -135,4 +135,9 @@
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+.fade-out {
+    transition: opacity 1s;
+    opacity: 0;
 }
