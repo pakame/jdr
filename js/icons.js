@@ -17,6 +17,18 @@ export const svg = (name) => {
     .then((content) => cache[name] = content)
 };
 
+export const icon = (name, size) => {
+  return svg(name)
+    .then((icon) => parse(icon))
+    .then((icon) => {
+      if (size) {
+        icon.firstElementChild.classList.add('fa-' + size)
+      }
+
+      return icon
+    })
+};
+
 export const auto = () => {
   for (let elem of query('.svg-load')) {
     const name = elem.dataset['name'];

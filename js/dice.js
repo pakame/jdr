@@ -1,5 +1,5 @@
 import {parse, stringify} from "./html.js";
-import {svg} from "./icons.js";
+import {icon as svg} from "./icons.js";
 import {content, elem} from "./dom.js";
 
 export const DICE_ROLLING = 600; // ms
@@ -23,13 +23,7 @@ const dice_number = (number) => {
 export const roll = (number) => Math.floor(Math.random() * Math.floor(number)) + 1;
 
 export const dice = (number, size = '2x') => {
-  return svg('dice-' + dice_number(number)).then((content) => {
-    const icon = parse(content);
-
-    icon.children[0].classList.add('fa-' + size);
-
-    return icon;
-  });
+  return svg('dice-' + dice_number(number), size);
 };
 
 export const dice_as_html = (number, size = '2x') => {
@@ -86,16 +80,18 @@ export const render = (dice, roll, stats, critical = 3) => {
   const critical_success = critical;
   const critical_failure = dice - critical;
 
-  let result, color;
+  let result, color, icon;
 
   if (roll <= critical_success) {
     crit = true;
     result = "Reussite";
     color = "success";
+    icon = "hand-holding-magic"
   } else if (roll > critical_failure) {
     crit = true;
     result = "Echec";
     color = "danger";
+    icon = "poo"
   } else if (roll <= stats) {
     result = "Reussite";
     color = "success";
@@ -105,20 +101,23 @@ export const render = (dice, roll, stats, critical = 3) => {
   }
 
   if (crit) {
-    return elem('span', {
+    return svg(icon, 'lg').then((icon) => elem('span', {
       classes: "btn text-white border-" + color + " bg-" + color,
       body: [
-        elem('span', {classes: 'mr-1 badge badge-light', body: roll}),
+        elem('span', {classes: 'badge badge-light', body: roll}),
+        ' ',
         result + " Critique",
+        ' ',
+        icon,
       ]
-    });
+    }));
   }
 
-  return elem('span', {
+  return Promise.resolve(elem('span', {
     classes: "btn text-" + color + " border-" + color,
     body: [
       elem('span', {classes: 'mr-1 badge badge-' + color, body: roll}),
       result,
     ]
-  });
+  }));
 };

@@ -1,4 +1,5 @@
 import * as dom from "./dom.js";
+import {icon as svg} from "./icons.js";
 
 /**
  * @typedef {Object} Content
@@ -58,21 +59,24 @@ import * as dom from "./dom.js";
 
 /**
  * @param {ContentRow} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const row = (content) => {
+  let promise = Promise.resolve();
   const blocks = document.createDocumentFragment();
 
   for (let block of content.blocks) {
-    blocks.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: render(block)}));
+    promise = promise.then(() => render(block)).then((frag) => {
+      blocks.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: frag}))
+    });
   }
 
-  return dom.elem('div', {classes: 'row', body: blocks});
+  return promise.then(() => dom.elem('div', {classes: 'row', body: blocks}));
 };
 
 /**
  * @param {ContentCard} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const card = (content) => {
   const card = dom.elem('div', {
@@ -80,33 +84,48 @@ const card = (content) => {
     attrs: content.attrs
   });
 
+  let promise = Promise.resolve();
+
   if (content.header) {
-    card.appendChild(dom.elem('div', {classes: 'card-header', body: render(content.header)}))
+    promise = promise.then(() => render(content.header).then((frag) => {
+      card.appendChild(dom.elem('div', {classes: 'card-header', body: frag}))
+    }))
   }
   if (content.body) {
     const body = dom.elem('div', {classes: 'card-body'});
+
     if (content.title) {
-      body.appendChild(dom.elem('div', {classes: 'card-title', body: render(content.title)}))
+      promise = promise.then(() => render(content.title).then((frag) => {
+        body.appendChild(dom.elem('div', {classes: 'card-title', body: frag}))
+      }))
     }
-    body.appendChild(render(content.body));
+
+    promise = promise.then(() => render(content.body).then((frag) => {
+      body.appendChild(frag);
+    }));
+
     card.appendChild(body)
   }
   if (content.footer) {
-    card.appendChild(dom.elem('div', {classes: 'card-footer', body: render(content.footer)}))
+    promise = promise.then(() => render(content.footer).then((frag) => {
+      card.appendChild(dom.elem('div', {classes: 'card-footer', body: frag}))
+    }));
   }
 
-  return card;
+  return promise.then(() => card);
 };
 
 /**
  * @param {ContentTable} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const table = (content) => {
   const table = dom.elem('table', {
     classes: ['table small'].concat(content.class || []),
     attrs: content.attrs
   });
+
+  let promise = Promise.resolve();
 
   if (content.headers) {
     const head = dom.elem('tr');
@@ -115,88 +134,101 @@ const table = (content) => {
     }
     table.appendChild(dom.elem('thead', {body: head}));
   }
+
   if (content.data) {
     const body = dom.elem('tbody');
     for (let datum of content.data) {
       const tr = dom.elem('tr');
       for (let val of datum) {
-        tr.appendChild(dom.elem('td', {body: render(val)}));
+        promise = promise.then(() => render(val).then((frag) => {
+          tr.appendChild(dom.elem('td', {body: frag}));
+        }))
       }
       body.appendChild(tr);
     }
     table.appendChild(body);
   }
 
-  return table;
+  return promise.then(() => table);
+};
+
+/**
+ * @param content
+ * @return {Promise<Node>}
+ */
+const icon = (content) => {
+  return svg(content.icon, content.size)
 };
 
 /**
  * @param {ContentText} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const text = (content) => {
-  return dom.elem('span', {
+  return render(content.text).then((frag) => dom.elem('span', {
     classes: content.class,
-    body: render(content.text)
-  })
+    body: frag
+  }))
 };
 
 /**
  * @param {ContentParagraph} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const paragraph = (content) => {
-  return dom.elem('p', {
+  return render(content.text).then((frag) => dom.elem('p', {
     classes: content.class,
     attrs: content.attrs,
-    body: render(content.text)
-  })
+    body: frag
+  }))
 };
 
 /**
  * @param {ContentBlock} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const block = (content) => {
-  return dom.elem('div', {
+  return render(content.body).then((frag) => dom.elem('div', {
     classes: content.class,
     attrs: content.attrs,
-    body: render(content.body)
-  })
+    body: frag
+  }))
 };
 
 /**
  * @param {ContentRaw} content
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const raw = (content) => {
-  return dom.elem(content.tag, {
+  return render(content.body).then((frag) => dom.elem(content.tag, {
     classes: content.class,
     attrs: content.attrs,
-    body: render(content.body)
-  })
+    body: frag
+  }))
 };
 
 /**
  * @param content
  *
- * @return {Node}
+ * @return {Promise<Node>}
  */
 const render = (content) => {
   if (Array.isArray(content)) {
     const frag = document.createDocumentFragment();
-
+    let promise = Promise.resolve();
     for (let item of content) {
-      frag.appendChild(render(item));
+      promise = promise.then(() => render(item)).then((node) => {
+        frag.appendChild(node);
+      })
     }
 
-    return frag;
+    return promise.then(() => frag);
   }
 
   switch (typeof content) {
     case "number":
     case "string":
-      return document.createTextNode(content);
+      return Promise.resolve(document.createTextNode(content));
   }
 
   switch (content.type) {
@@ -206,6 +238,8 @@ const render = (content) => {
       return card(content);
     case 'table':
       return table(content);
+    case 'icon':
+      return icon(content);
     case 'div':
     case 'block':
       return block(content);

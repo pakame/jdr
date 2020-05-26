@@ -11,7 +11,14 @@
   },
   "tabs": {
     "spells": {
-      "name": "Sorts",
+      "name": [
+        {
+          "type": "icon",
+          "icon": "book-spells",
+          "size": "lg"
+        },
+        " Sorts"
+      ],
       "content": {
         "type": "row",
         "blocks": [
@@ -22,7 +29,14 @@
               {
                 "type": "div",
                 "class": "card-header bg-transparent text-success",
-                "body": "Sorts domestique"
+                "body": [
+                  {
+                    "type": "icon",
+                    "icon": "hat-witch",
+                    "size": "lg"
+                  },
+                  " Sorts domestique"
+                ]
               },
               {
                 "type": "table",
@@ -75,7 +89,14 @@
               {
                 "type": "div",
                 "class": "card-header bg-transparent text-danger",
-                "body": "Sorts offensif"
+                "body":[
+                  {
+                    "type": "icon",
+                    "icon": "dragon",
+                    "size": "lg"
+                  },
+                  " Sorts offensif"
+                ]
               },
               {
                 "type": "table",

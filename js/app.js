@@ -126,10 +126,9 @@ const load_player = (player) => {
 
       const stat = stats.get(target.name) + parseInt(dom.id('bonus-malus-' + target.name).value);
 
-      dom.content(
-        $result,
-        dice.render(100, d100, stat)
-      );
+      dice.render(100, d100, stat).then((content) => {
+        dom.content($result, content);
+      })
     }, DICE_ROLLING)
   });
 
@@ -166,9 +165,8 @@ const load_player = (player) => {
 
             return promise;
           })
-          .then((d100) => {
-            dom.content($result, dice.render(100, d100, chance))
-          });
+          .then((d100) => dice.render(100, d100, chance))
+          .then((content) => dom.content($result, content))
       })
       .then(() => {
         dom.id('calc').disabled = false;
@@ -219,22 +217,33 @@ const load_player = (player) => {
 const load_tabs = (tabs) => {
   const nav = dom.id('section-link');
   const container = dom.id('section-container');
+  const promises = [];
 
   for (let id in tabs) {
+    if (!tabs.hasOwnProperty(id)) {
+      continue;
+    }
+
     const tab = tabs[id];
 
-    nav.appendChild(dom.elem('a', {
-      classes: 'nav-item nav-link',
-      attrs: {href: '#' + id, 'data-toggle': 'tab'},
-      body: tab.name
+    promises.push(render(tab.name).then((frag) => {
+      nav.appendChild(dom.elem('a', {
+        classes: 'nav-item nav-link',
+        attrs: {href: '#' + id, 'data-toggle': 'tab'},
+        body: frag
+      }))
     }));
 
-    container.appendChild(dom.elem('div', {
-      classes: 'tab-pane',
-      attrs: {id: id},
-      body: render(tab.content)
+    promises.push(render(tab.content).then((frag) => {
+      container.appendChild(dom.elem('div', {
+        classes: 'tab-pane',
+        attrs: {id: id},
+        body: frag
+      }))
     }))
   }
+
+  return Promise.all(promises);
 };
 
 dom.add_delegate_event(document.body, 'click', '[data-toggle=tab]', (event, target) => {
@@ -254,8 +263,8 @@ ready(() => {
     .then((game) => {
 
       load_player(game.player);
-      load_tabs(game.tabs);
-
-      setTimeout(loader.hide, 300)
+      load_tabs(game.tabs).then(() => {
+        setTimeout(loader.hide, 300)
+      })
     });
 });
