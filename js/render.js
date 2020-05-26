@@ -1,5 +1,65 @@
 import * as dom from "./dom.js";
 
+/**
+ * @typedef {Object} Content
+ * @property {string} type
+ */
+
+/**
+ * @typedef {Content} ContentRow
+ * @property {Array<Content>} blocks
+ */
+
+/**
+ * @typedef {Content} ContentCard
+ * @property {string} class
+ * @property {Object} attrs
+ * @property {Content|string} header
+ * @property {Content|string} body
+ * @property {Content|string} title
+ * @property {Content|string} footer
+ */
+
+/**
+ * @typedef {Content} ContentTable
+ * @property {string} class
+ * @property {Object} attrs
+ * @property {Array<string>} headers
+ * @property {Array<Array<string>>} data
+ */
+
+/**
+ * @typedef {Content} ContentText
+ * @property {string} class
+ * @property {Content|string} text
+ */
+
+/**
+ * @typedef {Content} ContentParagraph
+ * @property {string} class
+ * @property {Object} attrs
+ * @property {Content|string} text
+ */
+
+/**
+ * @typedef {Content} ContentBlock
+ * @property {string} class
+ * @property {Object} attrs
+ * @property {Content|string} body
+ */
+
+/**
+ * @typedef {Content} ContentRaw
+ * @property {string} tag
+ * @property {string} class
+ * @property {Object} attrs
+ * @property {Content|string} body
+ */
+
+/**
+ * @param {ContentRow} content
+ * @return {Node}
+ */
 const row = (content) => {
   const blocks = document.createDocumentFragment();
 
@@ -10,9 +70,13 @@ const row = (content) => {
   return dom.elem('div', {classes: 'row', body: blocks});
 };
 
+/**
+ * @param {ContentCard} content
+ * @return {Node}
+ */
 const card = (content) => {
   const card = dom.elem('div', {
-    classes: ['card h-100'].concat(content?.class || []),
+    classes: ['card h-100'].concat(content.class || []),
     attrs: content.attrs
   });
 
@@ -34,6 +98,10 @@ const card = (content) => {
   return card;
 };
 
+/**
+ * @param {ContentTable} content
+ * @return {Node}
+ */
 const table = (content) => {
   const table = dom.elem('table', {
     classes: ['table small'].concat(content.class || []),
@@ -62,6 +130,10 @@ const table = (content) => {
   return table;
 };
 
+/**
+ * @param {ContentText} content
+ * @return {Node}
+ */
 const text = (content) => {
   return dom.elem('span', {
     classes: content.class,
@@ -69,6 +141,10 @@ const text = (content) => {
   })
 };
 
+/**
+ * @param {ContentParagraph} content
+ * @return {Node}
+ */
 const paragraph = (content) => {
   return dom.elem('p', {
     classes: content.class,
@@ -77,6 +153,10 @@ const paragraph = (content) => {
   })
 };
 
+/**
+ * @param {ContentBlock} content
+ * @return {Node}
+ */
 const block = (content) => {
   return dom.elem('div', {
     classes: content.class,
@@ -85,6 +165,10 @@ const block = (content) => {
   })
 };
 
+/**
+ * @param {ContentRaw} content
+ * @return {Node}
+ */
 const raw = (content) => {
   return dom.elem(content.tag, {
     classes: content.class,

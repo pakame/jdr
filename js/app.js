@@ -6,7 +6,7 @@ import render from "./render.js"
 import Stats from "./stats.js";
 import ready from "./ready.js";
 
-const DICE_ROLLING = 600; // ms
+const DICE_ROLLING = dice.DICE_ROLLING;
 
 const load_player = (player) => {
   const STATISTIQUES = player.statistics;
@@ -139,6 +139,8 @@ const load_player = (player) => {
     const stat1 = parseInt(dom.id('stat-1').value, 10);
     const stat2 = parseInt(dom.id('stat-2').value, 10);
     const chance_formula = dom.id('chance-formula');
+    const $result = dom.id('chance-result');
+    dom.empty($result);
 
     dice.dice_roll(20, null, true)
       .then(({d, promise}) => {
@@ -165,8 +167,6 @@ const load_player = (player) => {
             return promise;
           })
           .then((d100) => {
-            const $result = dom.id('result');
-            dom.empty($result);
             dom.content($result, dice.render(100, d100, chance))
           });
       })
@@ -248,14 +248,14 @@ dom.add_delegate_event(document.body, 'click', '[data-toggle=tab]', (event, targ
   target.classList.add('active');
 });
 
-fetch('game.json')
-  .then((game) => game.json())
-  .then((game) => {
+ready(() => {
+  fetch('game.json')
+    .then((game) => game.json())
+    .then((game) => {
 
-    load_player(game.player);
-    load_tabs(game.tabs);
+      load_player(game.player);
+      load_tabs(game.tabs);
 
-    ready(() => {
       setTimeout(loader.hide, 300)
     });
-  });
+});

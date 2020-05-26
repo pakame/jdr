@@ -2,7 +2,7 @@ import {parse, stringify} from "./html.js";
 import {svg} from "./icons.js";
 import {content, elem} from "./dom.js";
 
-const DICE_ROLLING = 600; // ms
+export const DICE_ROLLING = 600; // ms
 
 const dice_number = (number) => {
   if (number > 20) {
@@ -106,8 +106,7 @@ export const render = (dice, roll, stats, critical = 3) => {
 
   if (crit) {
     return elem('span', {
-      classes: "d-inline-block w-auto rounded border border-" + color + " bg-" + color + " text-white",
-      attrs: {style: 'padding:0.375rem'},
+      classes: "btn text-white border-" + color + " bg-" + color,
       body: [
         elem('span', {classes: 'mr-1 badge badge-light', body: roll}),
         result + " Critique",
@@ -116,8 +115,7 @@ export const render = (dice, roll, stats, critical = 3) => {
   }
 
   return elem('span', {
-    classes: "d-inline-block w-auto rounded border border-" + color,
-    attrs: {style: 'padding:0.375rem'},
+    classes: "btn text-" + color + " border-" + color,
     body: [
       elem('span', {classes: 'mr-1 badge badge-' + color, body: roll}),
       result,

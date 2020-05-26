@@ -100,6 +100,10 @@ export const add_delegate_event = (elem, type, selector, callback) => {
 
     while (target !== elem && !target.isSameNode(document)) {
       if (target.matches(selector)) {
+        if (target.disabled === true) {
+          return;
+        }
+
         return callback.call(this, event, target)
       }
 
