@@ -50,106 +50,111 @@
 <header class="jumbotron mt-0 mb-4 rounded-bottom">
   <h1 class="display-4"><small>JDR - Stats & dice roller</small></h1>
 </header>
-<div class="container-fluid">
-  <nav class="nav nav-tabs" id="section-link">
-    <a class="nav-item nav-link active" href="#player" data-toggle="tab">Joueur</a>
-  </nav>
-  <div class="tab-content" id="section-container">
-    <div class="tab-pane active" id="player">
-      <div class="row">
-        <div class="mt-4 col-lg-12 col-xl-6">
-          <div class="card h-100">
-            <div class="card-header">
-              Statistiques
-            </div>
-            <div class="card-body" id="stats">
+<div class="card border-left-0 border-right-0 rounded-0">
+  <div class="card-header">
+    <nav class="nav nav-tabs card-header-tabs" id="section-link">
+      <a class="nav-item nav-link active" href="#player" data-toggle="tab">Joueur</a>
+    </nav>
+  </div>
+
+  <div class="card-body">
+    <div class="tab-content" id="section-container">
+      <div class="tab-pane active" id="player">
+        <div class="row">
+          <div class="mb-4 col-lg-12 col-xl-6">
+            <div class="card h-100">
+              <div class="card-header">
+                Statistiques
+              </div>
+              <div class="card-body" id="stats">
+              </div>
             </div>
           </div>
-        </div>
-        <div class="mt-4 col-lg-6">
-          <div class="card h-100">
-            <div class="card-header">
-              Chance (X + Y - 100 - <span title="D20"><i class="svg-load" data-name="dice-12"></i></span>)
-            </div>
-            <div class="card-body">
-              <div class="row mb-1">
-                <div class="col-sm-9">
-                  <select class="form-control custom-select" id="select-stat-1">
-                    <option value="" selected disabled>Choose here</option>
-                  </select>
+          <div class="mb-4 col-lg-6">
+            <div class="card h-100">
+              <div class="card-header">
+                Chance (X + Y - 100 - <span title="D20"><i class="svg-load" data-name="dice-12"></i></span>)
+              </div>
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col-sm-9">
+                    <select class="form-control custom-select" id="select-stat-1">
+                      <option value="" selected disabled>Choose here</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control" id="stat-1" placeholder="10, 20, ...">
+                  </div>
                 </div>
-                <div class="col-sm-3">
-                  <input type="number" class="form-control" id="stat-1" placeholder="10, 20, ...">
+                <div class="row">
+                  <div class="col-sm-9">
+                    <select class="form-control custom-select" id="select-stat-2">
+                      <option value="" selected disabled>Choose here</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-3">
+                    <input type="number" class="form-control" id="stat-2" placeholder="10, 20, ...">
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-sm-9">
-                  <select class="form-control custom-select" id="select-stat-2">
-                    <option value="" selected disabled>Choose here</option>
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <input type="number" class="form-control" id="stat-2" placeholder="10, 20, ...">
-                </div>
+              <div class="card-body">
+                <button class="btn btn-outline-primary" id="calc">Get Lucky</button>
               </div>
-            </div>
-            <div class="card-body">
-              <button class="btn btn-outline-primary" id="calc">Get Lucky</button>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                Chance : <span id="chance-formula">...</span>
-              </li>
-            </ul>
-            <div class="card-footer">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  Chance : <span id="chance-formula">...</span>
+                </li>
+              </ul>
+              <div class="card-footer">
               <span class="btn" title="D100" id="chance-d100">
                 <i class="svg-load" data-name="dice-20" data-size="2x"></i>
               </span>
-              <span class="btn">Resultat : </span>
-              <span id="chance-result"></span>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 col-lg-6">
-          <div class="card h-100">
-            <div class="card-header">
-              Dés
-            </div>
-            <div class="card-body">
-              <div id="d-launcher" class="row">
-                <div class="col">
-                  <select class="form-control custom-select" id="d-numbers" name="d-numbers">
-                    <option value="1" selected>1 D</option>
-                    <option value="2">2 D</option>
-                    <option value="3">3 D</option>
-                    <option value="4">4 D</option>
-                    <option value="5">5 D</option>
-                    <option value="6">6 D</option>
-                  </select>
-                </div>
-                <div class="col">
-                  <select class="form-control custom-select" id="d-faces" name="d-faces">
-                    <option value="2">2 Faces</option>
-                    <option value="3">3 Faces</option>
-                    <option value="4">4 Faces</option>
-                    <option value="5">5 Faces</option>
-                    <option value="6">6 Faces</option>
-                    <option value="7">7 Faces</option>
-                    <option value="8">8 Faces</option>
-                    <option value="9">9 Faces</option>
-                    <option value="10">10 Faces</option>
-                    <option value="12">12 Faces</option>
-                    <option value="20">20 Faces</option>
-                    <option value="100" selected>100 Faces</option>
-                  </select>
-                </div>
-                <div class="col">
-                  <button class="btn btn-outline-primary" type="button">Lancer</button>
-                </div>
+                <span class="btn">Resultat : </span>
+                <span id="chance-result"></span>
               </div>
             </div>
-            <div class="card-body">
-              <div id="d-result" class="form-row text-center">
+          </div>
+          <div class="mb-4 col-lg-6">
+            <div class="card h-100">
+              <div class="card-header">
+                Dés
+              </div>
+              <div class="card-body">
+                <div id="d-launcher" class="row">
+                  <div class="col">
+                    <select class="form-control custom-select" id="d-numbers" name="d-numbers">
+                      <option value="1" selected>1 D</option>
+                      <option value="2">2 D</option>
+                      <option value="3">3 D</option>
+                      <option value="4">4 D</option>
+                      <option value="5">5 D</option>
+                      <option value="6">6 D</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <select class="form-control custom-select" id="d-faces" name="d-faces">
+                      <option value="2">2 Faces</option>
+                      <option value="3">3 Faces</option>
+                      <option value="4">4 Faces</option>
+                      <option value="5">5 Faces</option>
+                      <option value="6">6 Faces</option>
+                      <option value="7">7 Faces</option>
+                      <option value="8">8 Faces</option>
+                      <option value="9">9 Faces</option>
+                      <option value="10">10 Faces</option>
+                      <option value="12">12 Faces</option>
+                      <option value="20">20 Faces</option>
+                      <option value="100" selected>100 Faces</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <button class="btn btn-outline-primary" type="button">Lancer</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="d-result" class="form-row text-center">
+                </div>
               </div>
             </div>
           </div>
@@ -157,7 +162,6 @@
       </div>
     </div>
   </div>
-</div>
 </div>
 <footer class="jumbotron mt-4 mb-0 rounded-top">
   <p class="lead">Comment ça marche :<br>

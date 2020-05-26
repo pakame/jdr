@@ -64,7 +64,7 @@ const row = (content) => {
   const blocks = document.createDocumentFragment();
 
   for (let block of content.blocks) {
-    blocks.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mt-4', body: render(block)}));
+    blocks.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: render(block)}));
   }
 
   return dom.elem('div', {classes: 'row', body: blocks});
