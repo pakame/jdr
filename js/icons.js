@@ -1,4 +1,4 @@
-import {query} from "./dom.js";
+import {query_all} from "./dom.js";
 import {parse} from "./html.js";
 
 const cache = {};
@@ -30,7 +30,7 @@ export const icon = (name, size) => {
 };
 
 export const auto = () => {
-  for (let elem of query('.svg-load')) {
+  for (let elem of query_all('.svg-load')) {
     const name = elem.dataset['name'];
     const size = elem.dataset['size'];
     svg(name).then((icon) => {

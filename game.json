@@ -7,6 +7,10 @@
       "dexterity": "Dextérité",
       "perception": "Perception",
       "magic": "Pouvoir Magique"
+    },
+    "status": {
+      "life": 25,
+      "destiny": 1
     }
   },
   "tabs": {

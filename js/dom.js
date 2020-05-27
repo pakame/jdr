@@ -5,10 +5,19 @@
 export const id = (id) => document.getElementById(id);
 
 /**
+ *
  * @param {string} selector
+ * @param {Element} [element]
+ * @return {HTMLElement}
+ */
+export const query = (selector, element = null) => (element || document).querySelector(selector);
+
+/**
+ * @param {string} selector
+ * @param {Element} [element]
  * @return {NodeListOf<HTMLElementTagNameMap[*]>|Array<HTMLElement>}
  */
-export const query = (selector) => document.querySelectorAll(selector);
+export const query_all = (selector, element = null) => (element || document).querySelectorAll(selector);
 
 export const empty = (elem) => {
   const nodes = elem.childNodes;

@@ -3,20 +3,24 @@ import * as dice from "./dice.js";
 import * as icon from "./icons.js"
 import * as loader from "./loader.js"
 import render from "./render.js"
-import Stats from "./stats.js";
 import ready from "./ready.js";
+import Player from "./player.js";
+
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1)
+};
 
 const DICE_ROLLING = dice.DICE_ROLLING;
 
-const load_player = (player) => {
-  const STATISTIQUES = player.statistics;
-  const stats = new Stats(Object.keys(STATISTIQUES));
+const load_player = (data) => {
+  const STATISTIQUES = data.statistics;
+  const player = new Player({
+    status: data.status,
+    statistics: Object.keys(data.statistics)
+  });
 
   // Load statistics
-  stats.load();
-
-  // auto load icon
-  icon.auto();
+  player.load();
 
   // Generate contents
   for (let key in STATISTIQUES) {
@@ -40,7 +44,7 @@ const load_player = (player) => {
               body: dom.elem('input', {
                 classes: 'form-control',
                 attrs: {
-                  id: 'stats-' + key, type: 'number', name: key, value: stats.get(key),
+                  id: 'stats-' + key, type: 'number', name: key, value: player.getStat(key),
                   size: 2, maxlength: 2,
                   placeholder: 'Enter your stats for ' + stats_label
                 }
@@ -91,9 +95,32 @@ const load_player = (player) => {
 
   // Save stats on update
   dom.add_delegate_event(dom.id('stats'), 'change', 'input', (event, target) => {
-    stats.set(target.name, target.value);
+    player.setStat(target.name, target.value);
   });
 
+  // init life & destiny
+  const init_counter = (name) => {
+    const container = dom.id(name);
+
+    const update = () => {
+      dom.query('[name=value]', container).value = player['get' + name.capitalize()]();
+    };
+
+    dom.add_event(dom.query('[name=dec]', container), 'click', () => {
+      player['dec' + name.capitalize()]();
+      update()
+    });
+    dom.add_event(dom.query('[name=inc]', container), 'click', () => {
+      player['inc' + name.capitalize()]();
+      update()
+    });
+
+    update();
+  };
+  init_counter('life');
+  init_counter('destiny');
+
+  // design for bonus malus
   dom.add_delegate_event(dom.id('stats'), 'change', 'select', (event, target) => {
     const value = parseInt(target.value);
 
@@ -123,11 +150,14 @@ const load_player = (player) => {
 
       const d100 = dice.roll(100);
       const $result = target.parentElement.nextElementSibling;
+      const $bonus = dom.id('bonus-malus-' + target.name);
 
-      const stat = stats.get(target.name) + parseInt(dom.id('bonus-malus-' + target.name).value);
+      const stat = player.getStat(target.name) + parseInt($bonus.value);
 
       dice.render(100, d100, stat).then((content) => {
         dom.content($result, content);
+        $bonus.value = 0;
+        $bonus.dispatchEvent(new Event('change', {bubbles: true}))
       })
     }, DICE_ROLLING)
   });
@@ -178,10 +208,10 @@ const load_player = (player) => {
     const select_id = 'select-stat-' + i;
     const input_id = 'stat-' + i;
 
-    dom.id(select_id).addEventListener('change', (event) => {
+    dom.add_event(dom.id(select_id), 'change', (event) => {
       const select = (/** @type {HTMLSelectElement}*/dom.id(select_id));
 
-      dom.id(input_id).value = stats.get(select.value)
+      dom.id(input_id).value = player.getStat(select.value)
     })
   }
 
@@ -262,9 +292,15 @@ ready(() => {
     .then((game) => game.json())
     .then((game) => {
 
-      load_player(game.player);
-      load_tabs(game.tabs).then(() => {
+      Promise.all([
+        // auto load icon
+        icon.auto(),
+        // init player
+        load_player(game.player),
+        // init tabs
+        load_tabs(game.tabs)
+      ]).then(() => {
         setTimeout(loader.hide, 300)
-      })
+      });
     });
 });

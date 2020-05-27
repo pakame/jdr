@@ -1,6 +1,7 @@
 import {parse, stringify} from "./html.js";
 import {icon as svg} from "./icons.js";
 import {content, elem} from "./dom.js";
+import splash from "./splash.js";
 
 export const DICE_ROLLING = 600; // ms
 
@@ -101,6 +102,16 @@ export const render = (dice, roll, stats, critical = 3) => {
   }
 
   if (crit) {
+    svg(icon, '5x').then((icon) => {
+      splash(elem('div', {
+        classes: 'text-white',
+        body: [
+          elem('div', {classes: 'mb-4 fa-primary-rotate', body: icon}),
+          elem('div', {classes: 'fa-2x', body: result + " Critique"}),
+        ]
+      }), color)
+    });
+
     return svg(icon, 'lg').then((icon) => elem('span', {
       classes: "btn text-white border-" + color + " bg-" + color,
       body: [

@@ -6,12 +6,15 @@
     overflow: visible;
     vertical-align: -0.125em;
 }
+
 .svg-inline--fa.fa-w-14 {
     width: 0.875em;
 }
+
 .svg-inline--fa.fa-w-16 {
     width: 1em;
 }
+
 .svg-inline--fa.fa-w-20 {
     width: 1.25em;
 }
@@ -23,7 +26,15 @@
 
 .svg-inline--fa .fa-secondary {
     fill: currentColor;
-    opacity: 0.4;
+    opacity: .4;
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-primary {
+    opacity: .4;
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-secondary {
+    opacity: 1;
 }
 
 .fa-stack {
@@ -74,6 +85,15 @@
 
 .fa-5x {
     font-size: 5em;
+}
+
+.fa-primary-rotate .fa-primary {
+    animation: rotate-center 0.6s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite both;
+    transform-origin: center;
+}
+
+.fa-primary-rotate .fa-hand-holding-magic .fa-primary {
+    transform-origin: center 25%;
 }
 
 /* Force no top radius on rounded-bottom */
@@ -148,6 +168,25 @@
 .fade-out {
     transition: opacity 1s;
     opacity: 0;
+}
+
+.layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.splash {
+
+}
+
+.splash-content {
+    text-align: center;
 }
 
 .card .card {
