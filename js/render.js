@@ -62,16 +62,16 @@ import {icon as svg} from "./icons.js";
  * @return {Promise<Node>}
  */
 const row = (content) => {
-  let promise = Promise.resolve();
-  const blocks = document.createDocumentFragment();
+  let promises = [];
 
   for (let block of content.blocks) {
-    promise = promise.then(() => render(block)).then((frag) => {
-      blocks.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: frag}))
-    });
+    promises.push(render(block).then((frag) => {
+      return dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: frag})
+    }));
   }
 
-  return promise.then(() => dom.elem('div', {classes: 'row', body: blocks}));
+  return Promise.all(promises)
+    .then((blocks) => dom.elem('div', {classes: 'row', body: blocks}));
 };
 
 /**
@@ -84,35 +84,47 @@ const card = (content) => {
     attrs: content.attrs
   });
 
-  let promise = Promise.resolve();
+  let promises = [];
 
   if (content.header) {
-    promise = promise.then(() => render(content.header).then((frag) => {
-      card.appendChild(dom.elem('div', {classes: 'card-header', body: frag}))
+    const header = dom.elem('div', {classes: 'card-header'});
+
+    dom.content(card, header);
+
+    promises.push(render(content.header).then((frag) => {
+      dom.content(header, frag)
     }))
   }
   if (content.body) {
     const body = dom.elem('div', {classes: 'card-body'});
 
+    dom.content(card, body);
+
+    const body_promises = [];
+
     if (content.title) {
-      promise = promise.then(() => render(content.title).then((frag) => {
-        body.appendChild(dom.elem('div', {classes: 'card-title', body: frag}))
-      }))
+      const title = dom.elem('div', {classes: 'card-title'});
+
+      dom.content(body, title);
+
+      body_promises.push(render(content.title))
     }
 
-    promise = promise.then(() => render(content.body).then((frag) => {
-      body.appendChild(frag);
-    }));
+    body_promises.push(render(content.body));
 
-    card.appendChild(body)
+    promises.push(Promise.all(body_promises).then((frag) => dom.content(body, frag)));
   }
   if (content.footer) {
-    promise = promise.then(() => render(content.footer).then((frag) => {
-      card.appendChild(dom.elem('div', {classes: 'card-footer', body: frag}))
+    const footer = dom.elem('div', {classes: 'card-footer'});
+
+    dom.content(card, footer);
+
+    promises.push(render(content.footer).then((frag) => {
+      dom.content(footer, frag)
     }));
   }
 
-  return promise.then(() => card);
+  return Promise.all(promises).then(() => card);
 };
 
 /**
@@ -125,7 +137,7 @@ const table = (content) => {
     attrs: content.attrs
   });
 
-  let promise = Promise.resolve();
+  let promises = [];
 
   if (content.headers) {
     const head = dom.elem('tr');
@@ -140,8 +152,10 @@ const table = (content) => {
     for (let datum of content.data) {
       const tr = dom.elem('tr');
       for (let val of datum) {
-        promise = promise.then(() => render(val).then((frag) => {
-          tr.appendChild(dom.elem('td', {body: frag}));
+        const td = dom.elem('td');
+        dom.content(tr, td);
+        promises.push(render(val).then((frag) => {
+          dom.content(td, frag);
         }))
       }
       body.appendChild(tr);
@@ -149,7 +163,7 @@ const table = (content) => {
     table.appendChild(body);
   }
 
-  return promise.then(() => table);
+  return Promise.all(promises).then(() => table);
 };
 
 /**
@@ -215,14 +229,14 @@ const raw = (content) => {
 const render = (content) => {
   if (Array.isArray(content)) {
     const frag = document.createDocumentFragment();
-    let promise = Promise.resolve();
+    let promises = [];
     for (let item of content) {
-      promise = promise.then(() => render(item)).then((node) => {
-        frag.appendChild(node);
-      })
+      promises.push(render(item))
     }
 
-    return promise.then(() => frag);
+    return Promise.all(promises)
+      .then((nodes) => dom.content(frag, nodes))
+      .then(() => frag);
   }
 
   switch (typeof content) {
