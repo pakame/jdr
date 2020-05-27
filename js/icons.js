@@ -30,10 +30,12 @@ export const icon = (name, size) => {
 };
 
 export const auto = () => {
+  const promises = [];
+
   for (let elem of query_all('.svg-load')) {
     const name = elem.dataset['name'];
     const size = elem.dataset['size'];
-    svg(name).then((icon) => {
+    promises.push(svg(name).then((icon) => {
       icon = parse(icon);
 
       if (size) {
@@ -41,6 +43,8 @@ export const auto = () => {
       }
 
       elem.parentNode.replaceChild(icon, elem);
-    })
+    }))
   }
+
+  return Promise.all(promises)
 };
