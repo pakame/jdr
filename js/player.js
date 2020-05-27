@@ -37,7 +37,7 @@ export default class Player {
   }
 
   setStat(stat, value) {
-    this.stats[stat] = value;
+    this.stats[stat] = parseInt(value);
 
     this.save();
   }
