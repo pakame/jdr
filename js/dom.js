@@ -51,6 +51,26 @@ export const content = (elem, data) => {
   }
 };
 
+export const add_class = (elem, classes) => {
+  if (typeof classes === 'string') {
+    classes = [classes]
+  }
+
+  for (let c of classes) {
+    elem.classList.add(...(c.trim().split(" ")));
+  }
+};
+
+export const remove_class = (elem, classes) => {
+  if (typeof classes === 'string') {
+    classes = [classes]
+  }
+
+  for (let c of classes) {
+    elem.classList.remove(...(c.trim().split(" ")));
+  }
+};
+
 const dom_cache = {};
 /**
  * @param tag
@@ -67,13 +87,7 @@ export const elem = (tag, {classes, attrs, body} = {}) => {
   const elem = dom_cache[tag].cloneNode(true);
 
   if (classes) {
-    if (typeof classes === 'string') {
-      classes = [classes]
-    }
-
-    for (let c of classes) {
-      elem.classList.add(...(c.trim().split(" ")));
-    }
+    add_class(elem, classes);
   }
   if (attrs) {
     for (let attr in attrs) {
@@ -99,24 +113,36 @@ export const add_event = (elem, type, callback) => {
 };
 /**
  * @param {Element} elem
- * @param {string} type
- * @param {string} selector
+ * @param {string|Array<string>} type
+ * @param {string|Array<string>} selector
  * @param {function(Event, Element)} callback
  */
 export const add_delegate_event = (elem, type, selector, callback) => {
-  add_event(elem, type, (event) => {
-    let target = (/** @type {Element} */event.target);
+  if (typeof selector === 'string') {
+    selector = selector.split(',').map(value => value.trim());
+  }
 
-    while (target !== elem && !target.isSameNode(document)) {
-      if (target.matches(selector)) {
-        if (target.disabled === true) {
-          return;
+  if (typeof type === 'string') {
+    type = type.split(',').map(value => value.trim());
+  }
+
+  for (let t of type) {
+    add_event(elem, t, (event) => {
+      let target = (/** @type {Element} */event.target);
+
+      while (target !== elem && !target.isSameNode(document)) {
+        for (let s of selector) {
+          if (target.matches(selector)) {
+            if (target.disabled === true) {
+              return;
+            }
+
+            return callback.call(this, event, target)
+          }
         }
 
-        return callback.call(this, event, target)
+        target = target.parentNode;
       }
-
-      target = target.parentNode;
-    }
-  })
+    })
+  }
 };

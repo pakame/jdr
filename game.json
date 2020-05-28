@@ -18,7 +18,7 @@
       "name": [
         {
           "type": "icon",
-          "icon": "book-spells",
+          "icon": "staff",
           "size": "lg"
         },
         " Sorts"
@@ -44,7 +44,7 @@
               },
               {
                 "type": "table",
-                "class": "card-body",
+                "class": "small card-body",
                 "headers": [
                   "Nom",
                   "Description"
@@ -93,7 +93,7 @@
               {
                 "type": "div",
                 "class": "card-header bg-transparent text-danger",
-                "body":[
+                "body": [
                   {
                     "type": "icon",
                     "icon": "dragon",
@@ -104,6 +104,7 @@
               },
               {
                 "type": "table",
+                "class": "small card-body",
                 "headers": [
                   "Nom",
                   "Description"
@@ -159,6 +160,164 @@
           }
         ]
       }
+    },
+    "school": {
+      "name": [
+        {
+          "type": "icon",
+          "icon": "book-spells",
+          "size": "lg"
+        },
+        " Cours"
+      ],
+      "content": {
+        "type": "store",
+        "id": "classes",
+        "body": {
+          "type": "block",
+          "class": "row",
+          "body": [
+            {
+              "type": "each",
+              "data": [
+                {
+                  "key": "history",
+                  "label": "Histoire de la magie",
+                  "icon": "scroll-old"
+                },
+                {
+                  "key": "botanic",
+                  "label": "Botanique",
+                  "icon": "hand-holding-seeding"
+                },
+                {
+                  "key": "flask",
+                  "label": "Potion",
+                  "icon": "cauldron"
+                },
+                {
+                  "key": "dfmc",
+                  "label": "DFMC",
+                  "icon": "hook-cloak"
+                },
+                {
+                  "key": "astro",
+                  "label": "Astronomie",
+                  "icon": "planet-ring"
+                },
+                {
+                  "key": "spells",
+                  "label": "Sortilège",
+                  "icon": "wand-magic"
+                }
+              ],
+              "each": {
+                "type": "block",
+                "class": "col-12 col-md-6 mb-4",
+                "body": {
+                  "type": "card",
+                  "header": [
+                    {
+                      "type": "icon",
+                      "icon": ":icon:",
+                      "size": "lg"
+                    },
+                    " :label:"
+                  ],
+                  "body": [
+                    {
+                      "type": "for",
+                      "number": "5",
+                      "each": {
+                        "type": "template",
+                        "id": "input-apprentisage",
+                        "data": {
+                          "name": ":key:-:index:"
+                        }
+                      }
+                    },
+                    {
+                      "type": "raw",
+                      "tag": "textarea",
+                      "class": "form-control form-control-sm",
+                      "attrs": {
+                        "name": ":key:-text"
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "block",
+              "class": "col-12 col-md-6 mb-4",
+              "body": {
+                "type": "card",
+                "header": {
+                  "type": "input",
+                  "class": "p-0 form-control-plaintext",
+                  "name": "custom-classes",
+                  "placeholder": "Cours personnalisé"
+                },
+                "body": [
+                  {
+                    "type": "for",
+                    "number": "5",
+                    "each": {
+                      "type": "template",
+                      "id": "input-apprentisage",
+                      "data": {
+                        "name": "custom-:index:"
+                      }
+                    }
+                  },
+                  {
+                    "type": "raw",
+                    "tag": "textarea",
+                    "class": "form-control form-control-sm",
+                    "attrs": {
+                      "name": "custom-text"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "templates": {
+    "icon-label": [
+      {
+        "type": "icon",
+        "icon": ":icon:",
+        "size": ":size:"
+      },
+      " :label:"
+    ],
+    "input-apprentisage": {
+      "type": "block",
+      "class": "form-row flex-nowrap border-light border-bottom",
+      "body": [
+        {
+          "type": "input",
+          "name": ":name:-percent",
+          "input_type": "number",
+          "class": "col-auto form-control-sm form-control-plaintext w-25",
+          "placeholder": "0%",
+          "attrs": {
+            "min": 0,
+            "max": 100
+          }
+        },
+        {
+          "type": "input",
+          "name": ":name:-name",
+          "class": "col-auto form-control-sm form-control-plaintext w-75",
+          "placeholder": "..."
+        }
+      ]
     }
   }
 }

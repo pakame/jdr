@@ -1,7 +1,7 @@
 import cache from "./cache.js";
 
 export default class Player {
-  constructor({status = {}, statistics = []}) {
+  constructor({status = {}, statistics = [], customs = []}) {
     const {life = 0, destiny = 0} = status;
 
     this.life = life;
@@ -12,10 +12,16 @@ export default class Player {
     for (let stats of statistics) {
       this.stats[stats] = null;
     }
+
+    this.customs = {};
+
+    for (let custom of customs) {
+      this.customs[custom] = null;
+    }
   }
 
   load() {
-    const {life, destiny, stats = {}} = cache.get('player') || {};
+    const {life, destiny, stats = {}, customs = {}} = cache.get('player') || {};
 
     if (life != null)
       this.life = life;
@@ -26,6 +32,8 @@ export default class Player {
     for (let stat in this.stats) {
       this.stats[stat] = parseInt(stats[stat] || 0);
     }
+
+    this.customs = customs;
   }
 
   save() {
@@ -73,5 +81,15 @@ export default class Player {
       this.destiny--;
       this.save()
     }
+  }
+
+  setCustom(key, value) {
+    this.customs[key] = value;
+
+    this.save()
+  }
+
+  getCustom(key) {
+    return this.customs[key] || null
   }
 }

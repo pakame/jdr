@@ -2,7 +2,7 @@ import * as dom from "./dom.js";
 import * as dice from "./dice.js";
 import * as icon from "./icons.js"
 import * as loader from "./loader.js"
-import render from "./render.js"
+import render, {load_templates} from "./render.js"
 import ready from "./ready.js";
 import Player from "./player.js";
 
@@ -12,9 +12,12 @@ String.prototype.capitalize = function () {
 
 const DICE_ROLLING = dice.DICE_ROLLING;
 
+let player;
+
 const load_player = (data) => {
   const STATISTIQUES = data.statistics;
-  const player = new Player({
+
+  player = new Player({
     status: data.status,
     statistics: Object.keys(data.statistics)
   });
@@ -45,7 +48,7 @@ const load_player = (data) => {
                 classes: 'form-control',
                 attrs: {
                   id: 'stats-' + key, type: 'number', name: key, value: player.getStat(key),
-                  size: 2, maxlength: 2,
+                  min: 5, max: 90,
                   placeholder: 'Enter your stats for ' + stats_label
                 }
               })
@@ -242,12 +245,35 @@ const load_player = (data) => {
 
   dom.add_delegate_event(dom.id('d-launcher'), 'change', 'select', d_compute);
   dom.add_delegate_event(dom.id('d-launcher'), 'click', 'button', d_compute);
+
+  // Store
+  dom.add_delegate_event(
+    document.body,
+    'change, keyup',
+    '.store input, .store textarea',
+    (event, target) => {
+      player.setCustom(target.name, target.value)
+    }
+  )
 };
 
 const load_tabs = (tabs) => {
+  dom.add_delegate_event(document.body, 'click', '[data-toggle=tab]', (event, target) => {
+    const target_id = target.getAttribute('href').substr(1);
+    const element = dom.id(target_id);
+
+    element.closest('.tab-content').querySelector('.tab-pane.active').classList.remove('active');
+    element.classList.add('active');
+
+    target.closest('.nav-tabs').querySelector('.nav-link.active').classList.remove('active');
+    target.classList.add('active');
+  });
+
   const nav = dom.id('section-link');
   const container = dom.id('section-container');
-  const promises = [];
+
+  const nav_promises = [];
+  const content_promises = [];
 
   for (let id in tabs) {
     if (!tabs.hasOwnProperty(id)) {
@@ -256,41 +282,30 @@ const load_tabs = (tabs) => {
 
     const tab = tabs[id];
 
-    promises.push(render(tab.name).then((frag) => {
-      nav.appendChild(dom.elem('a', {
-        classes: 'nav-item nav-link',
-        attrs: {href: '#' + id, 'data-toggle': 'tab'},
-        body: frag
-      }))
-    }));
+    nav_promises.push(render(tab.name).then((frag) => dom.elem('a', {
+      classes: 'nav-item nav-link',
+      attrs: {href: '#' + id, 'data-toggle': 'tab'},
+      body: frag
+    })));
 
-    promises.push(render(tab.content).then((frag) => {
-      container.appendChild(dom.elem('div', {
-        classes: 'tab-pane',
-        attrs: {id: id},
-        body: frag
-      }))
-    }))
+    content_promises.push(render(tab.content).then((frag) => dom.elem('div', {
+      classes: 'tab-pane',
+      attrs: {id: id},
+      body: frag
+    })))
   }
 
-  return Promise.all(promises);
+  return Promise.all([
+    Promise.all(nav_promises).then((nodes) => dom.content(nav, nodes)),
+    Promise.all(content_promises).then((nodes) => dom.content(container, nodes))
+  ]);
 };
-
-dom.add_delegate_event(document.body, 'click', '[data-toggle=tab]', (event, target) => {
-  const target_id = target.getAttribute('href').substr(1);
-  const element = dom.id(target_id);
-
-  element.closest('.tab-content').querySelector('.tab-pane.active').classList.remove('active');
-  element.classList.add('active');
-
-  target.closest('.nav-tabs').querySelector('.nav-link.active').classList.remove('active');
-  target.classList.add('active');
-});
 
 ready(() => {
   fetch('game.json')
     .then((game) => game.json())
     .then((game) => {
+      load_templates(game.templates);
 
       Promise.all([
         // auto load icon
@@ -299,8 +314,15 @@ ready(() => {
         load_player(game.player),
         // init tabs
         load_tabs(game.tabs)
-      ]).then(() => {
-        setTimeout(loader.hide, 300)
-      });
+      ])
+        .then(() => {
+          // init customs input
+          for (let input of dom.query_all('.store input, .store textarea')) {
+            input.value = player.getCustom(input.name)
+          }
+        })
+        .then(() => {
+          setTimeout(loader.hide, 300)
+        });
     });
 });

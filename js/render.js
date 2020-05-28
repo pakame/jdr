@@ -64,9 +64,20 @@ import {icon as svg} from "./icons.js";
 const row = (content) => {
   let promises = [];
 
-  for (let block of content.blocks) {
-    promises.push(render(block).then((frag) => {
-      return dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: frag})
+  if (Array.isArray(content.blocks)) {
+    for (let block of content.blocks) {
+      promises.push(render(block).then((frag) => {
+        return dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: frag})
+      }));
+    }
+  } else if (typeof content.blocks === 'object' && content.blocks.type === 'each') {
+    promises.push(render(content.blocks).then((frag) => {
+      const nodes = document.createDocumentFragment();
+      let child;
+      while ((child = frag.childNodes[0])) {
+        nodes.appendChild(dom.elem('div', {classes: 'col-auto flex-grow-1 mb-4', body: child}))
+      }
+      return nodes;
     }));
   }
 
@@ -133,7 +144,7 @@ const card = (content) => {
  */
 const table = (content) => {
   const table = dom.elem('table', {
-    classes: ['table small'].concat(content.class || []),
+    classes: ['table'].concat(content.class || []),
     attrs: content.attrs
   });
 
@@ -209,6 +220,25 @@ const block = (content) => {
   }))
 };
 
+const input = (content) => {
+  return Promise.resolve(dom.elem('input', {
+    classes: 'form-control ' + (content.class || ''),
+    attrs: Object.assign({}, content.attrs, {
+      type: content.input_type || 'text',
+      name: content.name,
+      placeholder: content.placeholder
+    })
+  }))
+};
+
+const store = (content) => {
+  return render(content.body).then((frag) => dom.elem('div', {
+    classes: "store",
+    attrs: {id: content.id},
+    body: frag
+  }));
+};
+
 /**
  * @param {ContentRaw} content
  * @return {Promise<Node>}
@@ -221,12 +251,84 @@ const raw = (content) => {
   }))
 };
 
+const _recurse_replace = (elem, replacements) => {
+  if (typeof elem === "string") {
+    for (let key in replacements) {
+      elem = elem.replace(new RegExp(':' + key + ':', 'g'), replacements[key]);
+    }
+
+    return elem;
+  }
+  if (Array.isArray(elem)) {
+    const shadow = [];
+
+    for (let item of elem) {
+      shadow.push(_recurse_replace(item, replacements))
+    }
+
+    return shadow;
+  }
+  if (typeof elem === 'object') {
+    const shadow = {};
+
+    for (let key in elem) {
+      shadow[key] = _recurse_replace(elem[key], replacements);
+    }
+
+    return shadow;
+  }
+
+  return elem;
+};
+
+const _for = (content) => {
+  const promises = [];
+
+  for (let i = 0; i < content.number; i++) {
+    promises.push(render(_recurse_replace(content.each, {index: i})))
+  }
+
+  return Promise.all(promises).then((nodes) => {
+    const frag = document.createDocumentFragment();
+    dom.content(frag, nodes);
+    return frag;
+  })
+};
+
+const _each = (content) => {
+  const promises = [];
+
+  for (let item of content.data) {
+    promises.push(render(_recurse_replace(content.each, item)))
+  }
+
+
+  return Promise.all(promises).then((nodes) => {
+    const frag = document.createDocumentFragment();
+    dom.content(frag, nodes);
+    return frag;
+  })
+};
+
+let templates = {};
+
+export const load_templates = (data) => {
+  templates = data;
+};
+
+const _template = (content) => {
+  return render(_recurse_replace(templates[content.id], content.data))
+};
+
 /**
  * @param content
  *
  * @return {Promise<Node>}
  */
 const render = (content) => {
+  if (content == null) {
+    return Promise.resolve(document.createDocumentFragment())
+  }
   if (Array.isArray(content)) {
     const frag = document.createDocumentFragment();
     let promises = [];
@@ -246,6 +348,12 @@ const render = (content) => {
   }
 
   switch (content.type) {
+    case 'for':
+      return _for(content);
+    case 'each':
+      return _each(content);
+    case 'template':
+      return _template(content);
     case 'row':
       return row(content);
     case 'card':
@@ -263,6 +371,10 @@ const render = (content) => {
     case 'p':
     case 'paragraph':
       return paragraph(content);
+    case 'store':
+      return store(content);
+    case 'input':
+      return input(content);
     case 'raw':
       return raw(content)
   }

@@ -93,6 +93,7 @@
 }
 
 .fa-primary-rotate .fa-hand-holding-magic .fa-primary {
+    animation: rotate-center 1.5s cubic-bezier(0.46, 0.03, 0.52, 0.96) infinite both;
     transform-origin: center 25%;
 }
 
@@ -201,6 +202,13 @@
     background-color: transparent;
 }
 
+.card > .table thead th {
+    border-top: none;
+}
+
+.table td {
+    vertical-align: middle;
+}
 
 #stats input[type=number] {
     max-width: 4.5em;
