@@ -157,6 +157,35 @@
                 ]
               }
             ]
+          },
+          {
+            "type": "card",
+            "header": [
+              {
+                "type": "icon",
+                "icon": "graduation-cap",
+                "size": "lg"
+              },
+              " Sorts Appris"
+            ],
+            "body": [
+              {
+                "type": "store",
+                "id": "custom-spells",
+                "class": "card-body",
+                "body": {
+                  "type": "for",
+                  "number": "10",
+                  "each": {
+                    "type": "template",
+                    "id": "input-apprentisage",
+                    "data": {
+                      "name": "c-spells-:index:"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ]
       }
