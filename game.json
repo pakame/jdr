@@ -248,31 +248,40 @@
                 "type": "block",
                 "class": "col-12 col-md-6 mb-4",
                 "body": {
-                  "type": "card",
-                  "header": [
-                    {
-                      "type": "icon",
-                      "icon": ":icon:",
-                      "size": "lg"
-                    },
-                    " :label:"
-                  ],
+                  "type": "block",
+                  "class": "card",
                   "body": [
                     {
-                      "type": "for",
-                      "number": "10",
-                      "each": {
-                        "type": "template",
-                        "id": "input-apprentisage",
-                        "data": {
-                          "name": ":key:-:index:"
+                      "type": "block",
+                      "class": "card-header",
+                      "body": [
+                        {
+                          "type": "icon",
+                          "icon": ":icon:",
+                          "size": "lg"
+                        },
+                        " :label:"
+                      ]
+                    },
+                    {
+                      "type": "block",
+                      "class": "card-body border-bottom",
+                      "body": {
+                        "type": "for",
+                        "number": "10",
+                        "each": {
+                          "type": "template",
+                          "id": "input-apprentisage",
+                          "data": {
+                            "name": ":key:-:index:"
+                          }
                         }
                       }
                     },
                     {
                       "type": "raw",
                       "tag": "textarea",
-                      "class": "form-control form-control-sm",
+                      "class": "card-body border-0 form-control form-control-sm",
                       "attrs": {
                         "name": ":key:-text"
                       }
@@ -285,29 +294,38 @@
               "type": "block",
               "class": "col-12 col-md-6 mb-4",
               "body": {
-                "type": "card",
-                "header": {
-                  "type": "input",
-                  "class": "p-0 form-control-plaintext",
-                  "name": "custom-classes",
-                  "placeholder": "Cours personnalisé"
-                },
+                "type": "block",
+                "class": "card",
                 "body": [
                   {
-                    "type": "for",
-                    "number": "10",
-                    "each": {
-                      "type": "template",
-                      "id": "input-apprentisage",
-                      "data": {
-                        "name": "custom-:index:"
+                    "type": "block",
+                    "class": "card-header",
+                    "body": {
+                      "type": "input",
+                      "class": "p-0 form-control-plaintext",
+                      "name": "custom-classes",
+                      "placeholder": "Cours personnalisé"
+                    }
+                  },
+                  {
+                    "type": "block",
+                    "class": "card-body border-bottom",
+                    "body": {
+                      "type": "for",
+                      "number": "10",
+                      "each": {
+                        "type": "template",
+                        "id": "input-apprentisage",
+                        "data": {
+                          "name": "custom-:index:"
+                        }
                       }
                     }
                   },
                   {
                     "type": "raw",
                     "tag": "textarea",
-                    "class": "form-control form-control-sm",
+                    "class": "card-body border-0 form-control form-control-sm",
                     "attrs": {
                       "name": "custom-text"
                     }
