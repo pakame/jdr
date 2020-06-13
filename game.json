@@ -179,7 +179,7 @@
                 "class": "card-body",
                 "body": {
                   "type": "for",
-                  "number": "10",
+                  "number": "20",
                   "each": {
                     "type": "template",
                     "id": "input-apprentisage",
@@ -260,7 +260,7 @@
                   "body": [
                     {
                       "type": "for",
-                      "number": "5",
+                      "number": "10",
                       "each": {
                         "type": "template",
                         "id": "input-apprentisage",
@@ -295,7 +295,7 @@
                 "body": [
                   {
                     "type": "for",
-                    "number": "5",
+                    "number": "10",
                     "each": {
                       "type": "template",
                       "id": "input-apprentisage",
